@@ -14,7 +14,7 @@
 #**************************************************************************************/
 
 # Sanity check
-ifeq ($(wildcard $(NEMU_HOME)/src/nemu-main.c),)
+ifeq ($(wildcard $(NEMU_HOME)/src/nemu-main.c),) #wildcard函数: 用于检查文件是否存在。
   $(error NEMU_HOME=$(NEMU_HOME) is not a NEMU repo)
 endif
 
