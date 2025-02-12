@@ -88,9 +88,14 @@ static int cmd_si(char *args){
 }
 
 static int cmd_info(char *args){
-  return 0;
-};
-
+    if(args == NULL)
+        printf("No args.\n");
+    else if(strcmp(args, "r") == 0)
+        isa_reg_display();
+    //else if(strcmp(args, "w") == 0)
+        //sdb_watchpoint_display();
+    return 0;
+}
 
 static int cmd_help(char *args) {
   /* extract the first argument */
