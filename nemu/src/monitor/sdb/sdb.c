@@ -57,6 +57,8 @@ static int cmd_help(char *args);
 
 static int cmd_si(char *args);
 
+static int cmd_info(char *args);
+
 static struct {
   const char *name;
   const char *description;
@@ -66,6 +68,8 @@ static struct {
   { "c", "Continue the execution of the program", cmd_c },
   { "q", "Exit NEMU", cmd_q },
   { "si", "execute N steps of the program",cmd_si},
+  { "info", "print the situation of the program, r/w",cmd_info},
+
 
   /* TODO: Add more commands */
 
@@ -74,9 +78,19 @@ static struct {
 #define NR_CMD ARRLEN(cmd_table)
 
 static int cmd_si(char *args){
-  return 0;
-  
+    int step = 0;
+    if(args == NULL)
+        step = 1;
+    else
+        sscanf(args,"%d",&step);// 读入 Step
+    cpu_exec(step);
+    return 0;
 }
+
+static int cmd_info(char *args){
+  return 0;
+};
+
 
 static int cmd_help(char *args) {
   /* extract the first argument */
