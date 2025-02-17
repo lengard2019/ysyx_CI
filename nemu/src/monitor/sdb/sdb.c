@@ -43,7 +43,7 @@ static char* rl_gets() {
 }
 
 static int cmd_c(char *args) {
-  // printf(nemu_state.state);
+  printf("%d\n",nemu_state.state);
   cpu_exec(-1);
   return 0;
 }
