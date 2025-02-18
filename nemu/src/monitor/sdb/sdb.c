@@ -43,16 +43,16 @@ static char* rl_gets() {
 }
 
 static int cmd_c(char *args) {
-  printf("%d\n",nemu_state.state);
+  printf("%d\n",nemu_state.state);//STOP
   cpu_exec(-1);
-  printf("%d\n",nemu_state.state);
+  printf("%d\n",nemu_state.state);//NEMU_END
   return 0;
   
 }
 
 
 static int cmd_q(char *args) {
-  nemu_state.state = NEMU_QUIT;
+  // nemu_state.state = NEMU_QUIT;
   printf("%d\n",nemu_state.state);
   return -1;
 }
