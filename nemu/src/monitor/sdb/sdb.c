@@ -18,6 +18,7 @@
 #include <readline/readline.h>
 #include <readline/history.h>
 #include "sdb.h"
+#include <memory/paddr.h>
 
 static int is_batch_mode = false;
 
@@ -47,7 +48,6 @@ static int cmd_c(char *args) {
   cpu_exec(-1);
   // printf("%d\n",nemu_state.state);//NEMU_END
   return 0;
-  
 }
 
 
@@ -63,7 +63,7 @@ static int cmd_si(char *args);
 
 static int cmd_info(char *args);
 
-// static int cmd_x(char *args);
+static int cmd_x(char *args);
 
 static struct {
   const char *name;
@@ -75,7 +75,7 @@ static struct {
   { "q", "Exit NEMU", cmd_q },
   { "si", "execute N steps of the program", cmd_si},
   { "info", "print the situation of the program, r/w", cmd_info},
-  { "x", "scan ddr", },
+  { "x", "scan ddr", cmd_x},
 
 
   /* TODO: Add more commands */
@@ -94,20 +94,20 @@ static int cmd_si(char *args){
     return 0;
 }
 
-// static int cmd_x(char *args){
-//     char* n = strtok(args," ");
-//     char* baseaddr = strtok(NULL," ");
-//     int len = 0;
-//     paddr_t addr = 0;
-//     sscanf(n, "%d", &len);
-//     sscanf(baseaddr,"%x", &addr);
-//     for(int i = 0 ; i < len ; i ++)
-//     {
-//         printf("%x\n", paddr_read(addr,4));//addr len
-//         addr = addr + 4;
-//     }
-//     return 0;
-// }
+static int cmd_x(char *args){
+    char* n = strtok(args," ");
+    char* baseaddr = strtok(NULL," ");
+    int len = 0;
+    paddr_t addr = 0;
+    sscanf(n, "%d", &len);
+    sscanf(baseaddr,"%x", &addr);
+    for(int i = 0 ; i < len ; i ++)
+    {
+        printf("%x\n", paddr_read(addr,4));//addr len
+        addr = addr + 4;
+    }
+    return 0;
+}
 
 
 static int cmd_info(char *args){
