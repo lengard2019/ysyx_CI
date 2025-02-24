@@ -19,6 +19,7 @@
 #include <readline/history.h>
 #include "sdb.h"
 #include <memory/paddr.h>
+#include "expr.h"
 
 static int is_batch_mode = false;
 
@@ -100,7 +101,16 @@ static int cmd_si(char *args){
 }
 
 static int cmd_p(char *args){
-    printf("%s",args);
+    //printf("%s",args);
+    bool *a = false;
+    expr(args,a);
+
+
+
+
+
+
+
     return 0;
 }
 
@@ -203,6 +213,7 @@ void init_sdb() {
   init_wp_pool();
 }
 
-void make_token(){
+// void make_token(){
+  
 
-}
+// }

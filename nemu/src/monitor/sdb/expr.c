@@ -21,7 +21,10 @@
 #include <regex.h>
 
 enum {
-  TK_NOTYPE = 256, TK_EQ,
+  TK_NOTYPE = 256, 
+  TK_EQ     = 266,
+  NUM       = 1,
+
 
   /* TODO: Add more token types */
 
@@ -37,8 +40,14 @@ static struct rule {
    */
 
   {" +", TK_NOTYPE},    // spaces
-  {"\\+", '+'},         // plus
+  {"\\+", '+'},         // plus，匹配后返回ASCII码值
   {"==", TK_EQ},        // equal
+  {"\\-", '-'},         // minus
+  {"\\*", '*'},         // 乘法
+  {"\\/", '/'},         // 除法
+  {"\\(", '('},
+  {"\\)", ')'},
+  {"[0-9]+", NUM},
 };
 
 #define NR_REGEX ARRLEN(rules)
@@ -119,7 +128,7 @@ word_t expr(char *e, bool *success) {
   }
 
   /* TODO: Insert codes to evaluate the expression. */
-  TODO();
+   printf("mark\n");
 
   return 0;
 }
