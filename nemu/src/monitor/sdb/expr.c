@@ -124,11 +124,12 @@ static bool make_token(char *e) {
 word_t expr(char *e, bool *success) {
   if (!make_token(e)) {
     *success = false;
+    printf("mark\n");
     return 0;
   }
 
   /* TODO: Insert codes to evaluate the expression. */
-   printf("mark\n");
+   
 
   return 0;
 }
