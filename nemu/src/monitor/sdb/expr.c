@@ -108,6 +108,8 @@ static bool make_token(char *e) {
 
           case(1): printf("mark\n");
 
+          case(TK_NOTYPE): printf("mark2\n");
+
           default: TODO();//please implement me"
         }
 
