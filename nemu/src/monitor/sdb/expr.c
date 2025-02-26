@@ -26,6 +26,7 @@ enum {
   NUM       = 1,
 
 
+
   /* TODO: Add more token types */
 
 };
@@ -57,7 +58,7 @@ static regex_t re[NR_REGEX] = {};
 /* Rules are used for many times.
  * Therefore we compile them only once before any usage.
  */
-void init_regex() {
+void init_regex() {//编译正则表达式
   int i;
   char error_msg[128];
   int ret;
@@ -104,7 +105,7 @@ static bool make_token(char *e) {
          */
 
         switch (rules[i].token_type) {
-          default: TODO();
+          default: TODO();//please implement me"
         }
 
         break;
@@ -124,12 +125,14 @@ static bool make_token(char *e) {
 word_t expr(char *e, bool *success) {
   if (!make_token(e)) {
     *success = false;
-    printf("mark\n");
+    // printf("mark\n");
     return 0;
   }
 
   /* TODO: Insert codes to evaluate the expression. */
-   
+  init_regex();
+
+  make_token(e);
 
   return 0;
 }
