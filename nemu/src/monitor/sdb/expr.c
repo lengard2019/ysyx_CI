@@ -24,8 +24,8 @@ enum {
   TK_NOTYPE = 256, 
   TK_EQ     = 266,
   NUM       = 1,
-
-
+  LEFT      = 2,
+  RIGHT     = 3,
 
   /* TODO: Add more token types */
 
@@ -46,8 +46,8 @@ static struct rule {
   {"\\-", '-'},         // minus
   {"\\*", '*'},         // 乘法
   {"\\/", '/'},         // 除法
-  {"\\(", '('},
-  {"\\)", ')'},
+  {"\\(", LEFT},
+  {"\\)", RIGHT},
   {"[0-9]+", NUM},
 };
 
