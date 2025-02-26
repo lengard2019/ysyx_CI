@@ -106,7 +106,7 @@ static bool make_token(char *e) {
          * of tokens, some extra actions should be performed.
          */
 
-        printf("%d\n",rules[i].token_type);
+        printf("%d\n", rules[i].token_type);
 
         // switch (rules[i].token_type) {
 
@@ -137,6 +137,7 @@ word_t expr(char *e, bool *success) {
     // printf("mark\n");
     return 0;
   }
+  printf("%d\n", NR_REGEX);
 
   /* TODO: Insert codes to evaluate the expression. */
   init_regex();
