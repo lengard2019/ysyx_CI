@@ -105,6 +105,9 @@ static bool make_token(char *e) {
          */
 
         switch (rules[i].token_type) {
+
+          case(1): printf("mark\n");
+
           default: TODO();//please implement me"
         }
 
