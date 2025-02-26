@@ -105,12 +105,6 @@ static int cmd_p(char *args){
     bool *a = false;
     expr(args,a);
 
-
-
-
-
-
-
     return 0;
 }
 
