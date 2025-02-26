@@ -106,16 +106,18 @@ static bool make_token(char *e) {
          * of tokens, some extra actions should be performed.
          */
 
-        switch (rules[i].token_type) {
+        printf("%d\n",rules[i].token_type);
 
-          case(1): printf("mark\n");
+        // switch (rules[i].token_type) {
 
-          case(TK_NOTYPE): printf("mark2\n");
+        //   case(1): printf("mark\n");
 
-          default: TODO();//please implement me"
-        }
+        //   case(TK_NOTYPE): printf("mark2\n");
 
-        // break;
+        //   default: TODO();//please implement me"
+        // }
+
+        break;
       }
     }
 
