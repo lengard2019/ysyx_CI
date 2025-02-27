@@ -109,7 +109,6 @@ static bool make_token(char *e) {
          */
 
         // printf("%d %d\n", i, rules[i].token_type);
-        Token tmp_token;
 
         switch (rules[i].token_type) {
 
@@ -117,42 +116,49 @@ static bool make_token(char *e) {
               break;
 
           case(PLUS): 
-              tmp_token.type = PLUS;
-              tokens[nr_token ++] = tmp_token;
+              tokens[nr_token].type = PLUS;
+              strcpy(tokens[nr_token].str, "+");
+              nr_token ++;
               break;
 
           case(TK_EQ):
-              tmp_token.type = TK_EQ;
+              tokens[nr_token].type = TK_EQ;
               strcpy(tokens[nr_token].str, "==");
+              nr_token ++;
               break;
 
           case(MINUS):
-              tmp_token.type = MINUS;
-              tokens[nr_token ++] = tmp_token;
+              tokens[nr_token].type = MINUS;
+              strcpy(tokens[nr_token].str, "-");
+              nr_token ++;
               break;
 
           case(MULTI):
-              tmp_token.type = MULTI;
-              tokens[nr_token ++] = tmp_token;
+              tokens[nr_token].type = MULTI;
+              strcpy(tokens[nr_token].str, "*");
+              nr_token ++;
               break;
 
           case(DIV): 
-              tmp_token.type = DIV;
-              tokens[nr_token ++] = tmp_token;
+              tokens[nr_token].type = DIV;
+              strcpy(tokens[nr_token].str, "/");
+              nr_token ++;
               break;
 
           case(LEFT): 
-              tmp_token.type = LEFT;
-              tokens[nr_token ++] = tmp_token;
+              tokens[nr_token].type = LEFT;
+              strcpy(tokens[nr_token].str, "(");
+              nr_token ++;
               break;
 
           case(RIGHT): 
-              tmp_token.type = RIGHT;
-              tokens[nr_token ++] = tmp_token;
+              tokens[nr_token].type = RIGHT;
+              strcpy(tokens[nr_token].str, ")");
+              nr_token ++;
               break;
 
           case(NUM): 
-              tmp_token.type = NUM;
+              tokens[nr_token].type = NUM;
               strncpy(tokens[nr_token].str, &e[position - substr_len], substr_len);
               nr_token++;
               break;
@@ -174,18 +180,43 @@ static bool make_token(char *e) {
   return true;
 }
 
+// uint32_t eval(p, q) {
+//   if (p > q) {
+//     /* Bad expression */
+
+//   }
+//   else if (p == q) {
+//     /* Single token.
+//      * For now this token should be a number.
+//      * Return the value of the number.
+//      */
+//   }
+//   else if (check_parentheses(p, q) == true) {
+//     /* The expression is surrounded by a matched pair of parentheses.
+//      * If that is the case, just throw away the parentheses.
+//      */
+//     return eval(p + 1, q - 1);
+//   }
+//   else {
+//     /* We should do more things here. */
+//   }
+// }
+
+
 
 word_t expr(char *e, bool *success) {
   if (!make_token(e)) {
     *success = false;
     return 0;
   }
-  // printf("%d\n", NR_REGEX);
-
-  /* TODO: Insert codes to evaluate the expression. */
+  printf("%d\n", NR_REGEX);
   for (int i = 0; i < nr_token; i++){
     printf("%d %s\n",tokens[i].type, tokens[i].str);
   }
+
+  /* TODO: Insert codes to evaluate the expression. */
+
+  
 
 
 
