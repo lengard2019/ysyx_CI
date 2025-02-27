@@ -209,7 +209,7 @@ word_t expr(char *e, bool *success) {
     *success = false;
     return 0;
   }
-  printf("%d\n", NR_REGEX);
+  // printf("%d\n", NR_REGEX);
   for (int i = 0; i < nr_token; i++){
     printf("%d %s\n",tokens[i].type, tokens[i].str);
   }
