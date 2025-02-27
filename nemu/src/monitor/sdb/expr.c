@@ -22,10 +22,14 @@
 
 enum {
   TK_NOTYPE = 256, 
-  TK_EQ     = 266,
-  NUM       = 1,
-  LEFT      = 2,
-  RIGHT     = 3,
+  PLUS      = 0,
+  TK_EQ     = 1,
+  MINUS     = 2,
+  MULTI     = 3,
+  DIV       = 4,
+  LEFT      = 5,
+  RIGHT     = 6,
+  NUM       = 7,
 
   /* TODO: Add more token types */
 
@@ -41,11 +45,11 @@ static struct rule {
    */
 
   {" +", TK_NOTYPE},    // spaces
-  {"\\+", '+'},         // plus，匹配后返回ASCII码值
+  {"\\+", PLUS},         // plus，匹配后返回ASCII码值
   {"==", TK_EQ},        // equal
-  {"\\-", '-'},         // minus
-  {"\\*", '*'},         // 乘法
-  {"\\/", '/'},         // 除法
+  {"\\-", MINUS},         // minus
+  {"\\*", MULTI},         // multi
+  {"\\/", DIV},         // div
   {"\\(", LEFT},
   {"\\)", RIGHT},
   {"[0-9]+", NUM},
@@ -77,7 +81,7 @@ typedef struct token {
   char str[32];
 } Token;
 
-static Token tokens[32] __attribute__((used)) = {};
+static Token tokens[32] __attribute__((used)) = {};//即使某个变量或函数没有被显式使用，也不要优化掉它。
 static int nr_token __attribute__((used))  = 0;
 
 static bool make_token(char *e) {
@@ -104,17 +108,59 @@ static bool make_token(char *e) {
          * of tokens, some extra actions should be performed.
          */
 
-        printf("%d %d\n", i, rules[i].token_type);
+        // printf("%d %d\n", i, rules[i].token_type);
+        Token tmp_token;
 
-        // switch (rules[i].token_type) {
+        switch (rules[i].token_type) {
 
-        //   case(1): printf("mark\n");
+          case(TK_NOTYPE): 
+              break;
 
-        //   case(TK_NOTYPE): printf("mark2\n");
+          case(PLUS): 
+              tmp_token.type = PLUS;
+              tokens[nr_token ++] = tmp_token;
+              break;
 
-        //   default: TODO();//please implement me"
-        // }
+          case(TK_EQ):
+              tmp_token.type = TK_EQ;
+              strcpy(tokens[nr_token].str, "==");
+              break;
 
+          case(MINUS):
+              tmp_token.type = MINUS;
+              tokens[nr_token ++] = tmp_token;
+              break;
+
+          case(MULTI):
+              tmp_token.type = MULTI;
+              tokens[nr_token ++] = tmp_token;
+              break;
+
+          case(DIV): 
+              tmp_token.type = DIV;
+              tokens[nr_token ++] = tmp_token;
+              break;
+
+          case(LEFT): 
+              tmp_token.type = LEFT;
+              tokens[nr_token ++] = tmp_token;
+              break;
+
+          case(RIGHT): 
+              tmp_token.type = RIGHT;
+              tokens[nr_token ++] = tmp_token;
+              break;
+
+          case(NUM): 
+              tmp_token.type = NUM;
+              strncpy(tokens[nr_token].str, &e[position - substr_len], substr_len);
+              nr_token++;
+              break;
+
+          default: 
+              printf("no match\n");
+              break;
+        }
         break;
       }
     }
@@ -132,15 +178,16 @@ static bool make_token(char *e) {
 word_t expr(char *e, bool *success) {
   if (!make_token(e)) {
     *success = false;
-    // printf("mark\n");
     return 0;
   }
-  printf("%d\n", NR_REGEX);
+  // printf("%d\n", NR_REGEX);
 
   /* TODO: Insert codes to evaluate the expression. */
-  init_regex();
+  for (int i = 0; i < nr_token; i++){
+    printf("%d %s\n",tokens[i].type, tokens[i].str);
+  }
 
-  make_token(e);
+
 
   return 0;
 }
