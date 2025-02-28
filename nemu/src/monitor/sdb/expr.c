@@ -176,32 +176,98 @@ static bool make_token(char *e) {
       return false;
     }
   }
+  return true; 
+}
 
+
+static bool check_parentheses(int p, int q)//判断总式或子式是否符合要求
+{
+  if(tokens[p].type != LEFT  || tokens[q].type != RIGHT)
+    return false;
+  int l = p , r = q;
+  while(l < r)
+  {
+    if(tokens[l].type == LEFT){
+      if(tokens[r].type == RIGHT)
+        {
+          l ++ , r --;
+          continue;
+        }
+
+      else
+        r --;
+    }
+    else if(tokens[l].type == RIGHT)
+      return false;
+    else l ++;
+  }
   return true;
 }
 
-// uint32_t eval(p, q) {
-//   if (p > q) {
-//     /* Bad expression */
+uint32_t eval(int p, int q) {
+  if (p > q) {
+    /* Bad expression */
+    assert(0);
+    return -1;
+  }
+  else if (p == q) {
+    /* Single token.
+     * For now this token should be a number.
+     * Return the value of the number.
+     */
+    return atoi(tokens[p].str);
+  }
+  else if (check_parentheses(p, q) == true) {
+    /* The expression is surrounded by a matched pair of parentheses.
+     * If that is the case, just throw away the parentheses.
+     */
+    return eval(p + 1, q - 1);
+  }
+  else {
+    int op = -1;//the position of 主运算符 in the token expression;
+    bool flag = false;//判断是否是加减号
 
-//   }
-//   else if (p == q) {
-//     /* Single token.
-//      * For now this token should be a number.
-//      * Return the value of the number.
-//      */
-//   }
-//   else if (check_parentheses(p, q) == true) {
-//     /* The expression is surrounded by a matched pair of parentheses.
-//      * If that is the case, just throw away the parentheses.
-//      */
-//     return eval(p + 1, q - 1);
-//   }
-//   else {
-//     /* We should do more things here. */
-//   }
-// }
+    //搜索主运算符的位置
+    for(int i = p; i < q; i++){
+      if(tokens[i].type == LEFT)//括号内最后算
+        {
+          while(tokens[i].type != RIGHT)
+            i ++;//若没有找到，将返回到Bad expression
+        }
+      if(!flag && ((tokens[i].type == PLUS) || (tokens[i].type == MINUS))){
+        flag = true;
+        op = i;
+        break;
+      }
+      if(!flag && ((tokens[i].type == MULTI) || (tokens[i].type == DIV))){
+        op = i;
+        break;
+      }
+    }
+    int op_type =  tokens[op].type;
 
+    uint32_t val1 = eval(p, op - 1);
+    uint32_t val2 = eval(op + 1, q);
+
+    switch (op_type) {
+      case PLUS: 
+        return val1 + val2;
+      case MINUS: 
+        return val1 - val2;
+      case MULTI: 
+        return val1 * val2;
+      case DIV: 
+        if (val2 == 0){
+          printf("division can't be 0\n");
+          return -1;
+        }
+        else{
+          return val1 / val2;
+        }  
+      default: assert(0);
+    }
+  }
+}
 
 
 word_t expr(char *e, bool *success) {
@@ -209,16 +275,16 @@ word_t expr(char *e, bool *success) {
     *success = false;
     return 0;
   }
+  word_t result = 0;
   // printf("%d\n", NR_REGEX);
-  for (int i = 0; i < nr_token; i++){
-    printf("%d %s\n",tokens[i].type, tokens[i].str);
-  }
+  // for (int i = 0; i < nr_token; i++){
+  //   printf("%d %s\n",tokens[i].type, tokens[i].str);
+  // }
 
   /* TODO: Insert codes to evaluate the expression. */
-
-  
-
+  result = eval(0, nr_token);
 
 
-  return 0;
+
+  return result;
 }
