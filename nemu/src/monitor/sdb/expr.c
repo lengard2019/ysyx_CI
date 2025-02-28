@@ -207,7 +207,7 @@ static bool check_parentheses(int p, int q)//判断总式或子式是否符合�
 uint32_t eval(int p, int q) {
   if (p > q) {
     /* Bad expression */
-    printf("%d %d %d\n", nr_token, p, q);
+    // printf("%d %d %d\n", nr_token, p, q);
     assert(0);
     return -1;
   }
@@ -282,10 +282,13 @@ word_t expr(char *e, bool *success) {
   //   printf("%d %s\n",tokens[i].type, tokens[i].str);
   // }
 
+  if(tokens[0].type != LEFT  || tokens[nr_token-1].type != RIGHT){
+    printf("please add a pair of parentheses\n");
+    return 0;
+  }
+
   /* TODO: Insert codes to evaluate the expression. */
   result = eval(0, nr_token - 1);
-
-
 
   return result;
 }
