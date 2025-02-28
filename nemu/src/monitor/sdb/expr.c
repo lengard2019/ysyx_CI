@@ -238,10 +238,12 @@ uint32_t eval(int p, int q) {
       if(!flag && ((tokens[i].type == PLUS) || (tokens[i].type == MINUS))){
         flag = true;
         op = i;
+        break;
         // op = (op > i) ? op : i;
       }
       if(!flag && ((tokens[i].type == MULTI) || (tokens[i].type == DIV))){
         op = i;
+        break;
         // op = (op > i) ? op : i;
       }
     }
