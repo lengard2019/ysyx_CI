@@ -103,7 +103,7 @@ static int cmd_p(char *args){
     //printf("%s",args);
     bool *a = false;
     word_t result = expr(args,a);
-    printf("%d", result);
+    printf("%d\n", result);
 
     return 0;
 }
