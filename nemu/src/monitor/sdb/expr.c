@@ -207,7 +207,7 @@ static bool check_parentheses(int p, int q)//判断总式或子式是否符合�
 uint32_t eval(int p, int q) {
   if (p > q) {
     /* Bad expression */
-    printf("%d %d\n", p, q);
+    printf("%d %d %d\n", nr_token, p, q);
     assert(0);
     return -1;
   }
