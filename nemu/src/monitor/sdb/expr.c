@@ -235,6 +235,12 @@ uint32_t eval(int p, int q) {
           while(tokens[i].type != RIGHT)
             i ++;//若没有找到，将返回到Bad expression
         }
+      if(tokens[i].type == RIGHT)
+        {
+          printf("wrong parentheses used\n");
+          assert(0);
+          return -1;
+        }
       if(!flag && ((tokens[i].type == PLUS) || (tokens[i].type == MINUS))){
         flag = true;
         op = i;
@@ -284,7 +290,7 @@ word_t expr(char *e, bool *success) {
 
   if(tokens[0].type != LEFT  || tokens[nr_token-1].type != RIGHT){
     printf("please add a pair of parentheses\n");
-    return 0;
+    return -1;
   }
 
   /* TODO: Insert codes to evaluate the expression. */
