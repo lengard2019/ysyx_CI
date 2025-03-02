@@ -232,12 +232,13 @@ uint32_t eval(int p, int q) {
     for(int i = p; i < q; i++){
       if(tokens[i].type == LEFT)//括号内最后算
         {
-          while(tokens[i].type != RIGHT)
+          while(tokens[i].type != RIGHT){
             i ++;//若没有找到，将返回到Bad expression
+            printf("%d\n",i);
+          } 
         }
       if(tokens[i].type == RIGHT)
         {
-          printf("%d\n",i);
           printf("wrong parentheses used\n");
           assert(0);
           return -1;
