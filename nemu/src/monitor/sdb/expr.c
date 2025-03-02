@@ -243,12 +243,12 @@ uint32_t eval(int p, int q) {
         }
       if(!flag && ((tokens[i].type == PLUS) || (tokens[i].type == MINUS))){
         flag = true;
-        op = i;
-        // op = (op > i) ? op : i;
+        // op = i;
+        op = (op > i) ? op : i;
       }
       if(!flag && ((tokens[i].type == MULTI) || (tokens[i].type == DIV))){
         op = i;
-        // op = (op > i) ? op : i;
+        op = (op > i) ? op : i;
       }
     }
     int op_type =  tokens[op].type;
@@ -298,4 +298,3 @@ word_t expr(char *e, bool *success) {
 
   return result;
 }
-//(1+2)*16+4*5
