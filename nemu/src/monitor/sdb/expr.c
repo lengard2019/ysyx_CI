@@ -237,7 +237,7 @@ uint32_t eval(int p, int q) {
           }
           i++; 
         }
-      if(tokens[i].type == RIGHT)
+      if(tokens[i].type == RIGHT)//跳过括号后不应该先出现右括号
         {
           printf("wrong parentheses used\n");
           assert(0);
@@ -299,4 +299,74 @@ word_t expr(char *e, bool *success) {
   result = eval(0, nr_token - 1);
 
   return result;
+}
+
+//for test
+static int index_buf __attribute__((used))  = 0;
+static char *buf __attribute__((used)) = "";
+
+int choose(int n){
+    int flag = rand() % 3 ; // 0 1 2
+	  printf("index = %d, flag = %d. \n",index_buf, flag);
+    return flag;
+}
+
+void gen_num(){
+    int num = rand()% 100;
+    int num_size = 0, num_tmp = num;
+    while(num_tmp){
+	    num_tmp /= 10;
+	    num_size ++;
+    }
+    int x = 1;
+    while(num_size)
+    {
+	    x *= 10;
+	    num_size -- ;
+    }
+    x /= 10;
+    while(num)
+    {
+	    char c = num / x + '0';
+	    num %= x;
+	    x /= 10;
+	    buf[index_buf ++] = c;
+    }
+}
+
+void gen(char c){
+    buf[index_buf ++] = c;
+}
+
+void gen_rand_op(){
+    char op[4] = {'+', '-', '*', '/'};
+    int op_position = rand() % 4;
+    buf[index_buf ++] = op[op_position];
+}
+
+static void gen_rand_expr() {
+    //    buf[0] = '\0';	
+    if(index_buf > 65530)
+       	printf("overSize\n");
+    switch (choose(3)) {
+	    case 0:
+	      gen_num();
+	      break;
+	    case 1:
+	      gen('(');
+	      gen_rand_expr();
+	      gen(')');
+	      break;
+	    default:
+	      gen_rand_expr();
+	      gen_rand_op();
+	      gen_rand_expr();
+	      break;
+    }
+}
+
+
+void gen_expr(){
+  gen_rand_expr();
+  printf("%s\n",buf);
 }

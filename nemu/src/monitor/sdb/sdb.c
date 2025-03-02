@@ -101,10 +101,20 @@ static int cmd_si(char *args){
 
 static int cmd_p(char *args){
     //printf("%s",args);
-    bool *a = false;
-    word_t result = expr(args,a);
-    printf("%d\n", result);
 
+    // if(args == NULL){
+    //     printf("No args\n");
+    //     return 0;
+    // }
+
+    // bool *a = false;
+    // word_t result = expr(args,a);
+    // printf("%d\n", result);
+
+  for(int i = 0; i < 100; i++){
+    gen_expr();
+  }
+    
     return 0;
 }
 
