@@ -368,7 +368,10 @@ static void gen_rand_expr() {
 
 void gen_expr(){
   gen_rand_expr();
+  buf[index_buf+1] = '\0';
+  
+  printf("%s\n",buf);
+  
   index_buf = 0;
   memset(buf, 0, sizeof(buf));
-  printf("%s\n",buf);
 }
