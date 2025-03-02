@@ -303,7 +303,7 @@ word_t expr(char *e, bool *success) {
 
 //for test
 static int index_buf __attribute__((used))  = 0;
-static char buf[100] __attribute__((used));
+static char buf[32] __attribute__((used));
 
 int choose(int n){
     int flag = rand() % 3 ; // 0 1 2
@@ -347,7 +347,7 @@ void gen_rand_op(){
 static void gen_rand_expr() {
     //    buf[0] = '\0';
     printf("%d\n",index_buf);	
-    if(index_buf > 65530)
+    if(index_buf > 32)
        	printf("overSize\n");
     switch (choose(3)) {
 	    case 0:
@@ -366,8 +366,9 @@ static void gen_rand_expr() {
     }
 }
 
-
 void gen_expr(){
   gen_rand_expr();
+  index_buf = 0;
+  memset(buf, 0, sizeof(buf));
   printf("%s\n",buf);
 }
