@@ -345,7 +345,8 @@ void gen_rand_op(){
 }
 
 static void gen_rand_expr() {
-    //    buf[0] = '\0';	
+    //    buf[0] = '\0';
+    printf("%d\n",index_buf);	
     if(index_buf > 65530)
        	printf("overSize\n");
     switch (choose(3)) {
