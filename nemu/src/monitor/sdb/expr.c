@@ -237,6 +237,7 @@ uint32_t eval(int p, int q) {
         }
       if(tokens[i].type == RIGHT)
         {
+          printf("%d\n",i);
           printf("wrong parentheses used\n");
           assert(0);
           return -1;
