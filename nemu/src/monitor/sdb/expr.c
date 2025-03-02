@@ -303,7 +303,7 @@ word_t expr(char *e, bool *success) {
 
 //for test
 static int index_buf __attribute__((used))  = 0;
-static char *buf __attribute__((used)) = "";
+static char *buf __attribute__((used));
 
 int choose(int n){
     int flag = rand() % 3 ; // 0 1 2
