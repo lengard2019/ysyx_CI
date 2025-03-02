@@ -234,8 +234,8 @@ uint32_t eval(int p, int q) {
         {
           while(tokens[i].type != RIGHT){
             i ++;//若没有找到，将返回到Bad expression
-            printf("%d\n",i);
-          } 
+          }
+          i++; 
         }
       if(tokens[i].type == RIGHT)
         {
