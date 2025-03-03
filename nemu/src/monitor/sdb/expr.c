@@ -30,6 +30,10 @@ enum {
   LEFT      = 5,
   RIGHT     = 6,
   NUM       = 7,
+  LEQ       = 8,
+  NOTEQ     = 9,
+  REG       = 10,
+  HEX       = 11,
 
   /* TODO: Add more token types */
 
@@ -53,6 +57,11 @@ static struct rule {
   {"\\(", LEFT},
   {"\\)", RIGHT},
   {"[0-9]+", NUM},
+  {"\\<\\=", LEQ},            
+  {"\\!\\=", NOTEQ},
+  {"\\$[a-zA-Z]*[0-9]*", REG},
+  {"0[xX][0-9a-fA-F]+", HEX},
+
 };
 
 #define NR_REGEX ARRLEN(rules)
@@ -345,6 +354,8 @@ void gen_rand_op(){
 }
 
 static void gen_rand_expr() {
+    index_buf = 0;
+    memset(buf, 0, sizeof(buf));
     //    buf[0] = '\0';
     printf("%d\n",index_buf);	
     if(index_buf > 32)
@@ -366,12 +377,10 @@ static void gen_rand_expr() {
     }
 }
 
-void gen_expr(){
+char* gen_expr(){
   gen_rand_expr();
   buf[index_buf+1] = '\0';
-  
-  printf("%s\n",buf);
-  
-  index_buf = 0;
-  memset(buf, 0, sizeof(buf));
+  char *e = buf;
+  // printf("%s\n",buf);
+  return e; 
 }

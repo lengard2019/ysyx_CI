@@ -102,19 +102,23 @@ static int cmd_si(char *args){
 static int cmd_p(char *args){
     //printf("%s",args);
 
-    // if(args == NULL){
-    //     printf("No args\n");
-    //     return 0;
+    if(args == NULL){
+        printf("No args\n");
+        return 0;
+    }
+
+    bool *a = false;
+    word_t result = expr(args,a);
+    printf("%d\n", result);
+
+    // for test
+    // for(int i = 0; i < 100; i++){
+    //   char *e = gen_expr();
+    //   bool *a = false;
+    //   word_t result = expr(e,a);
+    //   printf("%d\n", result);
     // }
 
-    // bool *a = false;
-    // word_t result = expr(args,a);
-    // printf("%d\n", result);
-
-  for(int i = 0; i < 100; i++){
-    gen_expr();
-  }
-    
     return 0;
 }
 
