@@ -60,7 +60,7 @@ static struct rule {
   {"\\/", DIV},         // div
   {"\\(", LEFT},
   {"\\)", RIGHT},
-  {"[A-Za-z0-9]+", NUM},
+  {"[A-FXa-fx0-9]+", NUM},
   {"\\<\\=", LEQ},
   {"\\!\\=", NOTEQ},
   {"\\>\\=", REQ},
@@ -314,17 +314,30 @@ static void token_special(){
     }
   }
   /*
-   * Init the tokens HEX
+   * Init the tokens NUM
   //  */
-  // for(int i = 0 ; i < nr_token ; i ++)
-  // {
-  //   if(tokens[i].type == HEX)// Hex num
-  //   {
-  //     int value = strtol(tokens[i].str, NULL, 16);
-  //     int2char(value, tokens[i].str);
-  //     tokens[i].type = NUM;
-  //   }
-  // }
+  for(int i = 0 ; i < nr_token ; i ++)
+  {
+    if(tokens[i].type == NUM)
+    {
+      if(tokens[i].str[0] == '0' && (tokens[i].str[1] == 'x'|| tokens[i].str[1] == 'X'))// Hex num
+      {
+        int value = strtol(tokens[i].str, NULL, 16);
+        int2char(value, tokens[i].str);
+      }
+      else
+      {
+        for(int j = 0; j < strlen(tokens[i].str); j++)
+        {
+          if(tokens[i].str[j] < '0' || tokens[i].str[j] > '9')
+          {
+            printf("the number of position %d is wrong", i);
+            assert(0);
+          }
+        }
+      }
+    }
+  }
 
   /*
    * 负数
