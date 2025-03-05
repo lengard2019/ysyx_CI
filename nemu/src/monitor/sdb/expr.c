@@ -289,14 +289,14 @@ static void token_special(){
 	    int tmp = isa_reg_str2val(tokens[i].str, &flag);
 	    if(flag){
 		    int2char(tmp, tokens[i].str); // transfrom the str --> $egx
-	    }
+        tokens[i].type = NUM;
+      }
       else{
 		    printf("Transfrom error. \n");
 		    assert(0);
 	    }
-	  }
+    }
   }
-
   /*
    * Init the tokens HEX
    */
@@ -306,6 +306,7 @@ static void token_special(){
     {
       int value = strtol(tokens[i].str, NULL, 16);
       int2char(value, tokens[i].str);
+      tokens[i].type = NUM;
     }
   }
 
@@ -339,34 +340,34 @@ static void token_special(){
 	  }
   }
 
-    /*
-     * !
-     *  
-     */
-  for(int i = 0 ; i < nr_token ; i ++)
-  {
-	  if(tokens[i].type == NOT)
-	  {
-	    tokens[i].type = TK_NOTYPE;//空格
-	    int tmp = char2int(tokens[i+1].str);
-	    if(tmp == 0){
-		    memset(tokens[i+1].str, 0 ,sizeof(tokens[i+1].str));
-		    tokens[i+1].str[0] = '1';
-	    }
-	    else{
-		    memset(tokens[i+1].str, 0 , sizeof(tokens[i+1].str));
-	    }
-	    for(int j = 0 ; j < nr_token ; j ++){
-		    if(tokens[j].type == TK_NOTYPE)
-		    {
-		      for(int k = j + 1 ; k < nr_token ; k ++){
-			      tokens[k - 1] = tokens[k];
-		      }
-		    nr_token -- ;
-		    }
-	    }
-	  }
-  }
+    // /*
+    //  * !
+    //  *  
+  //    */
+  // for(int i = 0 ; i < nr_token ; i ++)
+  // {
+	//   if(tokens[i].type == NOT)
+	//   {
+	//     tokens[i].type = TK_NOTYPE;//空格
+	//     int tmp = char2int(tokens[i+1].str);
+	//     if(tmp == 0){
+	// 	    memset(tokens[i+1].str, 0 ,sizeof(tokens[i+1].str));
+	// 	    tokens[i+1].str[0] = '1';
+	//     }
+	//     else{
+	// 	    memset(tokens[i+1].str, 0 , sizeof(tokens[i+1].str));
+	//     }
+	//     for(int j = 0 ; j < nr_token ; j ++){
+	// 	    if(tokens[j].type == TK_NOTYPE)
+	// 	    {
+	// 	      for(int k = j + 1 ; k < nr_token ; k ++){
+	// 		      tokens[k - 1] = tokens[k];
+	// 	      }
+	// 	    nr_token -- ;
+	// 	    }
+	//     }
+	//   }
+  // }
 
   /*
   * TODO
@@ -394,7 +395,6 @@ static void token_special(){
       }
     }
   }
-
 }
 
 
@@ -551,7 +551,8 @@ word_t expr(char *e, bool *success) {
     *success = false;
     return 0;
   }
-  token_special();
+
+  token_special();//特殊情况
   word_t result = 0;
   printf("%d\n", NR_REGEX);
   for (int i = 0; i < nr_token; i++){
