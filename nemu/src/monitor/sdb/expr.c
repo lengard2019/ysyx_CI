@@ -409,9 +409,13 @@ static void token_special(){
 	    ||(tokens[i].type == MULTI && i == 0))
 	  {
       tokens[i].type = TK_NOTYPE;
+      printf("mark\n");
       int tmp = char2int(tokens[i+1].str);
+      printf("mark\n");
       uintptr_t a = (uintptr_t)tmp;
+      printf("mark\n");
       int value = *((int*)a);
+      printf("mark\n");
       int2char(value, tokens[i+1].str);	    
       // 
       for(int j = 0 ; j < nr_token ; j ++){
