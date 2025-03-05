@@ -60,7 +60,7 @@ static struct rule {
   {"\\/", DIV},         // div
   {"\\(", LEFT},
   {"\\)", RIGHT},
-  {"[0-9]*", NUM},
+  {"\\d+", NUM},
   {"\\<\\=", LEQ},
   {"\\!\\=", NOTEQ},
   {"\\>\\=", REQ},
