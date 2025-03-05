@@ -408,11 +408,11 @@ static void token_special(){
 	    ||(tokens[i].type == MULTI && i == 0))
 	  {
       tokens[i].type = TK_NOTYPE;
-      printf("%s\n", tokens[i+1].str);
+      // printf("%s\n", tokens[i+1].str);
       int tmp = char2int(tokens[i+1].str);
       uintptr_t a = (uintptr_t)tmp;
-      printf("%ld %d\n",a,tmp);
-      if((int*)a != NULL){
+      // printf("%ld %d\n",a,tmp);
+      if((int*)a != NULL){//硬码地址？基本都是非法地址吧
         int value = *((int*)a);
         int2char(value, tokens[i+1].str);
         for(int j = 0 ; j < nr_token ; j ++){
@@ -589,18 +589,18 @@ word_t expr(char *e, bool *success) {
 
   token_special();//特殊情况
   word_t result = 0;
-  printf("%d\n", NR_REGEX);
-  for (int i = 0; i < nr_token; i++){
-    printf("%d %s\n",tokens[i].type, tokens[i].str);
-  }
-
-  // if(tokens[0].type != LEFT  || tokens[nr_token-1].type != RIGHT){
-  //   printf("please add a pair of parentheses\n");
-  //   return -1;
+  // printf("%d\n", NR_REGEX);
+  // for (int i = 0; i < nr_token; i++){
+  //   printf("%d %s\n",tokens[i].type, tokens[i].str);
   // }
 
+  if(tokens[0].type != LEFT  || tokens[nr_token-1].type != RIGHT){
+    printf("please add a pair of parentheses\n");
+    return -1;
+  }
+
   // /* TODO: Insert codes to evaluate the expression. */
-  // result = eval(0, nr_token - 1);
+  result = eval(0, nr_token - 1);
   for (int i = 0; i < nr_token; i++){
     tokens[i].type = 0;
     memset(tokens[i].str, '\0', sizeof(tokens[i].str));
