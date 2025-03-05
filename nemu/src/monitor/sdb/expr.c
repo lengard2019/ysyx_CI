@@ -402,7 +402,6 @@ static void token_special(){
   * TODO
   * Jie yin yong
   * */
-  printf("mark\n");
   for(int i = 0 ; i < nr_token ; i ++)
   {
     if((tokens[i].type == MULTI && i > 0 && tokens[i-1].type != NUM && tokens[i-1].type != REG && tokens[i+1].type == NUM)
@@ -411,21 +410,23 @@ static void token_special(){
       tokens[i].type = TK_NOTYPE;
       printf("%s\n", tokens[i+1].str);
       int tmp = char2int(tokens[i+1].str);
-      printf("mark\n");
       uintptr_t a = (uintptr_t)tmp;
-      printf("mark\n");
-      int value = *((int*)a);
-      printf("mark\n");
-      int2char(value, tokens[i+1].str);	    
-      // 
-      for(int j = 0 ; j < nr_token ; j ++){
-        if(tokens[j].type == TK_NOTYPE){
-          for(int k = j +1 ; k < nr_token ; k ++){
-            tokens[k - 1] = tokens[k];
+      if((int*)a != NULL){
+        int value = *((int*)a);
+        int2char(value, tokens[i+1].str);
+        for(int j = 0 ; j < nr_token ; j ++){
+          if(tokens[j].type == TK_NOTYPE){
+            for(int k = j +1 ; k < nr_token ; k ++){
+              tokens[k - 1] = tokens[k];
+            }
+            nr_token -- ;
           }
-          nr_token -- ;
         }
       }
+      else
+      {
+        printf("check the address\n");
+      }      	    
     }
   }
 }
