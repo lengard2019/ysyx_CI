@@ -60,16 +60,15 @@ static struct rule {
   {"\\/", DIV},         // div
   {"\\(", LEFT},
   {"\\)", RIGHT},
-  {"[0-9]+", NUM},
+  {"\\w+", NUM},
   {"\\<\\=", LEQ},
   {"\\!\\=", NOTEQ},
   {"\\>\\=", REQ},
   {"\\$\\$0|\\$ra|\\$sp|\\$gp|\\$tp|\\$t[0-6]|\\$s[0-9]|\\$s1[0-1]|\\$a[0-7]", REG},
-  {"0x[0-9a-fA-F]+", HEX},
+  {"\\@@", HEX},
   {"\\|\\|", OR},
   {"\\&\\&", AND},
   {"\\!", NOT},
-
 };
 
 #define NR_REGEX ARRLEN(rules)
