@@ -277,25 +277,25 @@ static bool make_token(char *e) {
   return true; 
 }
 
-// static void token_special(){
+static void token_special(){
 
-//   /*reg*/
-//   for(int i = 0; i < nr_token; i ++)
-//   {
-// 	  if(tokens[i].type == REG)
-// 	  {
-// 	    bool flag = true;
-// 	    int tmp = isa_reg_str2val(tokens[i].str, &flag);
-// 	    if(flag){
-// 		    int2char(tmp, tokens[i].str); // transfrom the str --> $egx
-//         tokens[i].type = NUM;
-//       }
-//       else{
-// 		    printf("Transfrom error. \n");
-// 		    assert(0);
-// 	    }
-//     }
-//   }
+  /*reg*/
+  for(int i = 0; i < nr_token; i ++)
+  {
+	  if(tokens[i].type == REG)
+	  {
+	    bool flag = true;
+	    int tmp = isa_reg_str2val(tokens[i].str, &flag);
+	    if(flag){
+		    int2char(tmp, tokens[i].str); // transfrom the str --> $egx
+        tokens[i].type = NUM;
+      }
+      else{
+		    printf("Transfrom error. \n");
+		    assert(0);
+	    }
+    }
+  }
   /*
    * Init the tokens HEX
   //  */
@@ -394,7 +394,7 @@ static bool make_token(char *e) {
   //     }
   //   }
   // }
-// }
+}
 
 
 
@@ -551,7 +551,7 @@ word_t expr(char *e, bool *success) {
     return 0;
   }
 
-  // token_special();//特殊情况
+  token_special();//特殊情况
   word_t result = 0;
   printf("%d\n", NR_REGEX);
   for (int i = 0; i < nr_token; i++){
