@@ -277,25 +277,25 @@ static bool make_token(char *e) {
   return true; 
 }
 
-static void token_special(){
+// static void token_special(){
 
-  /*reg*/
-  for(int i = 0; i < nr_token; i ++)
-  {
-	  if(tokens[i].type == REG)
-	  {
-	    bool flag = true;
-	    int tmp = isa_reg_str2val(tokens[i].str, &flag);
-	    if(flag){
-		    int2char(tmp, tokens[i].str); // transfrom the str --> $egx
-        tokens[i].type = NUM;
-      }
-      else{
-		    printf("Transfrom error. \n");
-		    assert(0);
-	    }
-    }
-  }
+//   /*reg*/
+//   for(int i = 0; i < nr_token; i ++)
+//   {
+// 	  if(tokens[i].type == REG)
+// 	  {
+// 	    bool flag = true;
+// 	    int tmp = isa_reg_str2val(tokens[i].str, &flag);
+// 	    if(flag){
+// 		    int2char(tmp, tokens[i].str); // transfrom the str --> $egx
+//         tokens[i].type = NUM;
+//       }
+//       else{
+// 		    printf("Transfrom error. \n");
+// 		    assert(0);
+// 	    }
+//     }
+//   }
   /*
    * Init the tokens HEX
   //  */
@@ -313,31 +313,31 @@ static void token_special(){
    * 负数
    */
 
-  for(int i = 0 ; i < nr_token ; i ++)
-  {
-	  if((tokens[i].type == '-' && i > 0 && tokens[i-1].type != NUM && tokens[i+1].type == NUM)
-      ||(tokens[i].type == '-' && i == 0))
-	  {
-	    //printf("%s\n", tokens[i+1].str);
-	    tokens[i].type = TK_NOTYPE;
-	    //tokens[i].str = tmp;
-	    for(int j = 31 ; j > 0 ; j --)
-      {
-		    tokens[i+1].str[j] = tokens[i+1].str[j-1];
-	    }
-	    tokens[i+1].str[0] = '-';
-	    // printf("%s\n", tokens[i+1].str);
-	    for(int j = 0 ; j < nr_token ; j ++){
-		    if(tokens[j].type == TK_NOTYPE)
-		    {
-		      for(int k = j + 1; k < nr_token; k ++){
-			      tokens[k - 1] = tokens[k];
-		      }
-		      nr_token -- ;
-		    }
-	    }
-	  }
-  }
+  // for(int i = 0 ; i < nr_token ; i ++)
+  // {
+	//   if((tokens[i].type == '-' && i > 0 && tokens[i-1].type != NUM && tokens[i+1].type == NUM)
+  //     ||(tokens[i].type == '-' && i == 0))
+	//   {
+	//     //printf("%s\n", tokens[i+1].str);
+	//     tokens[i].type = TK_NOTYPE;
+	//     //tokens[i].str = tmp;
+	//     for(int j = 31 ; j > 0 ; j --)
+  //     {
+	// 	    tokens[i+1].str[j] = tokens[i+1].str[j-1];
+	//     }
+	//     tokens[i+1].str[0] = '-';
+	//     // printf("%s\n", tokens[i+1].str);
+	//     for(int j = 0 ; j < nr_token ; j ++){
+	// 	    if(tokens[j].type == TK_NOTYPE)
+	// 	    {
+	// 	      for(int k = j + 1; k < nr_token; k ++){
+	// 		      tokens[k - 1] = tokens[k];
+	// 	      }
+	// 	      nr_token -- ;
+	// 	    }
+	//     }
+	//   }
+  // }
 
     // /*
     //  * !
@@ -394,7 +394,7 @@ static void token_special(){
   //     }
   //   }
   // }
-}
+// }
 
 
 
@@ -551,7 +551,7 @@ word_t expr(char *e, bool *success) {
     return 0;
   }
 
-  token_special();//特殊情况
+  // token_special();//特殊情况
   word_t result = 0;
   printf("%d\n", NR_REGEX);
   for (int i = 0; i < nr_token; i++){
