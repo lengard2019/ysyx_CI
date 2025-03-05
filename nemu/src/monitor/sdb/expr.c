@@ -402,6 +402,7 @@ static void token_special(){
   * TODO
   * Jie yin yong
   * */
+  printf("mark\n");
   for(int i = 0 ; i < nr_token ; i ++)
   {
     if((tokens[i].type == MULTI && i > 0 && tokens[i-1].type != NUM && tokens[i-1].type != REG && tokens[i+1].type == NUM)
