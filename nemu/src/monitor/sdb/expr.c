@@ -402,28 +402,27 @@ static void token_special(){
   * TODO
   * Jie yin yong
   * */
-  // for(int i = 0 ; i < nr_token ; i ++)
-  // {
-  //   if((tokens[i].type == '*' && i > 0 && tokens[i-1].type != NUM && tokens[i-1].type != HEX && tokens[i-1].type != REG && tokens[i+1].type == NUM)
-  //     ||(tokens[i].type == '*' && i > 0 && tokens[i-1].type != NUM && tokens[i-1].type != HEX && tokens[i-1].type != REG && tokens[i+1].type == HEX)
-	//     ||(tokens[i].type == '*' && i == 0))
-	//   {
-  //     tokens[i].type = TK_NOTYPE;
-  //     int tmp = char2int(tokens[i+1].str);
-  //     uintptr_t a = (uintptr_t)tmp;
-  //     int value = *((int*)a);
-  //     int2char(value, tokens[i+1].str);	    
-  //     // 
-  //     for(int j = 0 ; j < nr_token ; j ++){
-  //       if(tokens[j].type == TK_NOTYPE){
-  //         for(int k = j +1 ; k < nr_token ; k ++){
-  //           tokens[k - 1] = tokens[k];
-  //         }
-  //         nr_token -- ;
-  //       }
-  //     }
-  //   }
-  // }
+  for(int i = 0 ; i < nr_token ; i ++)
+  {
+    if((tokens[i].type == '*' && i > 0 && tokens[i-1].type != NUM && tokens[i-1].type != REG && tokens[i+1].type == NUM)
+	    ||(tokens[i].type == '*' && i == 0))
+	  {
+      tokens[i].type = TK_NOTYPE;
+      int tmp = char2int(tokens[i+1].str);
+      uintptr_t a = (uintptr_t)tmp;
+      int value = *((int*)a);
+      int2char(value, tokens[i+1].str);	    
+      // 
+      for(int j = 0 ; j < nr_token ; j ++){
+        if(tokens[j].type == TK_NOTYPE){
+          for(int k = j +1 ; k < nr_token ; k ++){
+            tokens[k - 1] = tokens[k];
+          }
+          nr_token -- ;
+        }
+      }
+    }
+  }
 }
 
 
