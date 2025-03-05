@@ -565,6 +565,10 @@ word_t expr(char *e, bool *success) {
 
   // /* TODO: Insert codes to evaluate the expression. */
   // result = eval(0, nr_token - 1);
+  for (int i = 0; i < nr_token; i++){
+    tokens[i].type = 0;
+    strcpy(tokens[i].str, "\0");
+  }
 
   return result;
 }
