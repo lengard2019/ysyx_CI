@@ -32,8 +32,12 @@ enum {
   NUM       = 7,
   LEQ       = 8,
   NOTEQ     = 9,
-  REG       = 10,
-  HEX       = 11,
+  REQ       = 10,
+  REG       = 11,
+  HEX       = 12,
+  OR        = 13,
+  AND       = 14,
+  NOT       = 15,
 
   /* TODO: Add more token types */
 
@@ -57,10 +61,14 @@ static struct rule {
   {"\\(", LEFT},
   {"\\)", RIGHT},
   {"[0-9]+", NUM},
-  {"\\<\\=", LEQ},            
+  {"\\<\\=", LEQ},
   {"\\!\\=", NOTEQ},
-  {"\\$[a-zA-Z]*[0-9]*", REG},
+  {"\\>\\=", REQ},
+  {"\\$\\$0|\\$ra|\\$sp|\\$gp|\\$tp|\\$t[0-6]|\\$s[0-9]|\\$s1[0-1]|\\$a[0-7]", REG},
   {"0[xX][0-9a-fA-F]+", HEX},
+  {"\\|\\|", OR},
+  {"\\&\\&", AND},
+  {"\\!", NOT},
 
 };
 
@@ -92,6 +100,40 @@ typedef struct token {
 
 static Token tokens[32] __attribute__((used)) = {};//即使某个变量或函数没有被显式使用，也不要优化掉它。
 static int nr_token __attribute__((used))  = 0;
+
+int char2int(char s[]){
+    int s_size = strlen(s);
+    int res = 0 ;
+    for(int i = 0 ; i < s_size ; i ++)
+    {
+	    res += s[i] - '0';
+      res *= 10;
+    }
+    res /= 10;
+    return res;
+}
+
+void int2char(int x, char str[]){
+    int len = strlen(str);
+    memset(str, 0, len);
+    int tmp_index = 0;
+    int tmp_x = x;
+    int x_size = 0, flag = 1;
+    while(tmp_x){
+	    tmp_x /= 10;
+	    x_size ++;
+	    flag *= 10;
+    }
+    flag /= 10;
+    while(x)
+    {
+	    int a = x / flag; 
+	    x %= flag;
+	    flag /= 10;
+	    str[tmp_index ++] = a + '0';
+    }
+}
+
 
 static bool make_token(char *e) {
   int position = 0;
@@ -172,6 +214,54 @@ static bool make_token(char *e) {
               nr_token++;
               break;
 
+          case(REG): 
+              tokens[nr_token].type = REG;
+              strncpy(tokens[nr_token].str, &e[position - substr_len], substr_len);
+              nr_token ++;
+              break;
+
+          case(HEX):
+              tokens[nr_token].type = HEX;
+              strncpy(tokens[nr_token].str, &e[position - substr_len], substr_len);
+              nr_token ++;
+              break;
+
+          case(LEQ):
+              tokens[nr_token].type = LEQ;
+              strcpy(tokens[nr_token].str, "<=");
+              nr_token ++;
+              break;
+
+          case(REQ):
+              tokens[nr_token].type = REQ;
+              strcpy(tokens[nr_token].str, ">=");
+              nr_token ++;
+              break;
+
+          case(NOTEQ):
+              tokens[nr_token].type = NOTEQ;
+              strcpy(tokens[nr_token].str, "!=");
+              nr_token ++;
+              break;
+
+          case(OR):
+              tokens[nr_token].type = OR;
+              strcpy(tokens[nr_token].str, "||");
+              nr_token ++;
+              break;
+
+          case(AND):
+              tokens[nr_token].type = AND;
+              strcpy(tokens[nr_token].str, "&&");
+              nr_token ++;
+              break;
+
+          case(NOT):
+              tokens[nr_token].type = NOT;
+              strcpy(tokens[nr_token].str, "!");
+              nr_token ++;
+              break;
+
           default: 
               printf("no match\n");
               break;
@@ -187,6 +277,126 @@ static bool make_token(char *e) {
   }
   return true; 
 }
+
+static void token_special(){
+
+  /*reg*/
+  for(int i = 0; i < nr_token; i ++)
+  {
+	  if(tokens[i].type == REG)
+	  {
+	    bool flag = true;
+	    int tmp = isa_reg_str2val(tokens[i].str, &flag);
+	    if(flag){
+		    int2char(tmp, tokens[i].str); // transfrom the str --> $egx
+	    }
+      else{
+		    printf("Transfrom error. \n");
+		    assert(0);
+	    }
+	  }
+  }
+
+  /*
+   * Init the tokens HEX
+   */
+  for(int i = 0 ; i < nr_token ; i ++)
+  {
+    if(tokens[i].type == HEX)// Hex num
+    {
+      int value = strtol(tokens[i].str, NULL, 16);
+      int2char(value, tokens[i].str);
+    }
+  }
+
+  /*
+   * 负数
+   */
+
+  for(int i = 0 ; i < nr_token ; i ++)
+  {
+	  if((tokens[i].type == '-' && i > 0 && tokens[i-1].type != NUM && tokens[i+1].type == NUM)
+      ||(tokens[i].type == '-' && i == 0))
+	  {
+	    //printf("%s\n", tokens[i+1].str);
+	    tokens[i].type = TK_NOTYPE;
+	    //tokens[i].str = tmp;
+	    for(int j = 31 ; j > 0 ; j --)
+      {
+		    tokens[i+1].str[j] = tokens[i+1].str[j-1];
+	    }
+	    tokens[i+1].str[0] = '-';
+	    // printf("%s\n", tokens[i+1].str);
+	    for(int j = 0 ; j < nr_token ; j ++){
+		    if(tokens[j].type == TK_NOTYPE)
+		    {
+		      for(int k = j + 1; k < nr_token; k ++){
+			      tokens[k - 1] = tokens[k];
+		      }
+		      nr_token -- ;
+		    }
+	    }
+	  }
+  }
+
+    /*
+     * !
+     *  
+     */
+  for(int i = 0 ; i < nr_token ; i ++)
+  {
+	  if(tokens[i].type == NOT)
+	  {
+	    tokens[i].type = TK_NOTYPE;//空格
+	    int tmp = char2int(tokens[i+1].str);
+	    if(tmp == 0){
+		    memset(tokens[i+1].str, 0 ,sizeof(tokens[i+1].str));
+		    tokens[i+1].str[0] = '1';
+	    }
+	    else{
+		    memset(tokens[i+1].str, 0 , sizeof(tokens[i+1].str));
+	    }
+	    for(int j = 0 ; j < nr_token ; j ++){
+		    if(tokens[j].type == TK_NOTYPE)
+		    {
+		      for(int k = j + 1 ; k < nr_token ; k ++){
+			      tokens[k - 1] = tokens[k];
+		      }
+		    nr_token -- ;
+		    }
+	    }
+	  }
+  }
+
+  /*
+  * TODO
+  * Jie yin yong
+  * */
+  for(int i = 0 ; i < nr_token ; i ++)
+  {
+    if((tokens[i].type == '*' && i > 0 && tokens[i-1].type != NUM && tokens[i-1].type != HEX && tokens[i-1].type != REG && tokens[i+1].type == NUM)
+      ||(tokens[i].type == '*' && i > 0 && tokens[i-1].type != NUM && tokens[i-1].type != HEX && tokens[i-1].type != REG && tokens[i+1].type == HEX)
+	    ||(tokens[i].type == '*' && i == 0))
+	  {
+      tokens[i].type = TK_NOTYPE;
+      int tmp = char2int(tokens[i+1].str);
+      uintptr_t a = (uintptr_t)tmp;
+      int value = *((int*)a);
+      int2char(value, tokens[i+1].str);	    
+      // 
+      for(int j = 0 ; j < nr_token ; j ++){
+        if(tokens[j].type == TK_NOTYPE){
+          for(int k = j +1 ; k < nr_token ; k ++){
+            tokens[k - 1] = tokens[k];
+          }
+          nr_token -- ;
+        }
+      }
+    }
+  }
+
+}
+
 
 
 static bool check_parentheses(int p, int q)//判断总式或子式是否符合要求
@@ -252,13 +462,49 @@ uint32_t eval(int p, int q) {
           assert(0);
           return -1;
         }
+      if(!flag && tokens[i].type == LEQ)
+        {
+          flag = true;
+          op = (op > i) ? op : i;
+        }
+      if(!flag && tokens[i].type == REQ)
+        {
+          flag = true;
+          op = (op > i) ? op : i;
+        }
+      if(!flag && tokens[i].type == TK_EQ)
+        {
+          flag = true;
+          op = (op > i) ? op : i;
+        }
+      if(!flag && tokens[i].type == NOTEQ)
+        {
+          flag = true;
+          op = (op > i) ? op : i;
+        }
+      if(!flag && tokens[i].type == OR)
+        {
+          flag = true;
+          op = (op > i) ? op : i;
+        }
+      if(!flag && tokens[i].type == AND)
+        {
+          flag = true;
+          op = (op > i) ? op : i;
+        }
+      if(!flag && tokens[i].type == NOTEQ)
+        {
+          flag = true;
+          op = (op > i) ? op : i;
+        }
+
       if(!flag && ((tokens[i].type == PLUS) || (tokens[i].type == MINUS))){
         flag = true;
         // op = i;
         op = (op > i) ? op : i;
       }
       if(!flag && ((tokens[i].type == MULTI) || (tokens[i].type == DIV))){
-        op = i;
+        // op = i;
         op = (op > i) ? op : i;
       }
     }
@@ -281,7 +527,19 @@ uint32_t eval(int p, int q) {
         }
         else{
           return val1 / val2;
-        }  
+        }
+      case TK_EQ:
+        return val1 == val2;
+      case LEQ:
+        return val1 <= val2;
+      case REQ:
+        return val1 >= val2;
+      case AND:
+        return val1 && val2;
+      case OR:
+        return val1 || val2;
+      case NOTEQ:
+        return val1 != val2;
       default: assert(0);
     }
   }
@@ -293,6 +551,7 @@ word_t expr(char *e, bool *success) {
     *success = false;
     return 0;
   }
+  token_special();
   word_t result = 0;
   // printf("%d\n", NR_REGEX);
   // for (int i = 0; i < nr_token; i++){
@@ -309,6 +568,8 @@ word_t expr(char *e, bool *success) {
 
   return result;
 }
+
+
 
 //for test
 static int index_buf __attribute__((used))  = 0;
