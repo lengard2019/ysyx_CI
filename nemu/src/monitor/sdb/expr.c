@@ -411,7 +411,7 @@ static void token_special(){
       printf("%s\n", tokens[i+1].str);
       int tmp = char2int(tokens[i+1].str);
       uintptr_t a = (uintptr_t)tmp;
-      printf("mark\n");
+      printf("%ld %d\n",a,tmp);
       if((int*)a != NULL){
         int value = *((int*)a);
         int2char(value, tokens[i+1].str);
