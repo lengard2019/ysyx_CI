@@ -34,7 +34,7 @@ enum {
   NOTEQ     = 9,
   REQ       = 10,
   REG       = 11,
-  HEX       = 12,
+  // HEX       = 12,
   OR        = 13,
   AND       = 14,
   NOT       = 15,
@@ -60,12 +60,12 @@ static struct rule {
   {"\\/", DIV},         // div
   {"\\(", LEFT},
   {"\\)", RIGHT},
-  {"d+", NUM},
+  {"\\d+|\\0[xX][0-9a-fA-F]+", NUM},
   {"\\<\\=", LEQ},
   {"\\!\\=", NOTEQ},
   {"\\>\\=", REQ},
   {"\\$\\$0|\\$ra|\\$sp|\\$gp|\\$tp|\\$t[0-6]|\\$s[0-9]|\\$s1[0-1]|\\$a[0-7]", REG},
-  {"0[xX][0-9a-fA-F]+", HEX},
+  // {"", HEX},
   {"\\|\\|", OR},
   {"\\&\\&", AND},
   {"\\!", NOT},
@@ -220,11 +220,11 @@ static bool make_token(char *e) {
               nr_token ++;
               break;
 
-          case(HEX):
-              tokens[nr_token].type = HEX;
-              strncpy(tokens[nr_token].str, &e[position - substr_len], substr_len);
-              nr_token ++;
-              break;
+          // case(HEX):
+          //     tokens[nr_token].type = HEX;
+          //     strncpy(tokens[nr_token].str, &e[position - substr_len], substr_len);
+          //     nr_token ++;
+          //     break;
 
           case(LEQ):
               tokens[nr_token].type = LEQ;
@@ -299,16 +299,16 @@ static void token_special(){
   }
   /*
    * Init the tokens HEX
-   */
-  for(int i = 0 ; i < nr_token ; i ++)
-  {
-    if(tokens[i].type == HEX)// Hex num
-    {
-      int value = strtol(tokens[i].str, NULL, 16);
-      int2char(value, tokens[i].str);
-      tokens[i].type = NUM;
-    }
-  }
+  //  */
+  // for(int i = 0 ; i < nr_token ; i ++)
+  // {
+  //   if(tokens[i].type == HEX)// Hex num
+  //   {
+  //     int value = strtol(tokens[i].str, NULL, 16);
+  //     int2char(value, tokens[i].str);
+  //     tokens[i].type = NUM;
+  //   }
+  // }
 
   /*
    * 负数
@@ -373,28 +373,28 @@ static void token_special(){
   * TODO
   * Jie yin yong
   * */
-  for(int i = 0 ; i < nr_token ; i ++)
-  {
-    if((tokens[i].type == '*' && i > 0 && tokens[i-1].type != NUM && tokens[i-1].type != HEX && tokens[i-1].type != REG && tokens[i+1].type == NUM)
-      ||(tokens[i].type == '*' && i > 0 && tokens[i-1].type != NUM && tokens[i-1].type != HEX && tokens[i-1].type != REG && tokens[i+1].type == HEX)
-	    ||(tokens[i].type == '*' && i == 0))
-	  {
-      tokens[i].type = TK_NOTYPE;
-      int tmp = char2int(tokens[i+1].str);
-      uintptr_t a = (uintptr_t)tmp;
-      int value = *((int*)a);
-      int2char(value, tokens[i+1].str);	    
-      // 
-      for(int j = 0 ; j < nr_token ; j ++){
-        if(tokens[j].type == TK_NOTYPE){
-          for(int k = j +1 ; k < nr_token ; k ++){
-            tokens[k - 1] = tokens[k];
-          }
-          nr_token -- ;
-        }
-      }
-    }
-  }
+  // for(int i = 0 ; i < nr_token ; i ++)
+  // {
+  //   if((tokens[i].type == '*' && i > 0 && tokens[i-1].type != NUM && tokens[i-1].type != HEX && tokens[i-1].type != REG && tokens[i+1].type == NUM)
+  //     ||(tokens[i].type == '*' && i > 0 && tokens[i-1].type != NUM && tokens[i-1].type != HEX && tokens[i-1].type != REG && tokens[i+1].type == HEX)
+	//     ||(tokens[i].type == '*' && i == 0))
+	//   {
+  //     tokens[i].type = TK_NOTYPE;
+  //     int tmp = char2int(tokens[i+1].str);
+  //     uintptr_t a = (uintptr_t)tmp;
+  //     int value = *((int*)a);
+  //     int2char(value, tokens[i+1].str);	    
+  //     // 
+  //     for(int j = 0 ; j < nr_token ; j ++){
+  //       if(tokens[j].type == TK_NOTYPE){
+  //         for(int k = j +1 ; k < nr_token ; k ++){
+  //           tokens[k - 1] = tokens[k];
+  //         }
+  //         nr_token -- ;
+  //       }
+  //     }
+  //   }
+  // }
 }
 
 
