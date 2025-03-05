@@ -343,31 +343,31 @@ static void token_special(){
    * 负数
    */
 
-  for(int i = 0 ; i < nr_token ; i ++)
-  {
-	  if((tokens[i].type == '-' && i > 0 && tokens[i-1].type != NUM && tokens[i+1].type == NUM)
-      ||(tokens[i].type == '-' && i == 0))
-	  {
-	    //printf("%s\n", tokens[i+1].str);
-	    tokens[i].type = TK_NOTYPE;
-	    //tokens[i].str = tmp;
-	    for(int j = 31 ; j > 0 ; j --)
-      {
-		    tokens[i+1].str[j] = tokens[i+1].str[j-1];
-	    }
-	    tokens[i+1].str[0] = '-';
-	    // printf("%s\n", tokens[i+1].str);
-	    for(int j = 0 ; j < nr_token ; j ++){
-		    if(tokens[j].type == TK_NOTYPE)
-		    {
-		      for(int k = j + 1; k < nr_token; k ++){
-			      tokens[k - 1] = tokens[k];
-		      }
-		      nr_token -- ;
-		    }
-	    }
-	  }
-  }
+  // for(int i = 0 ; i < nr_token ; i ++)
+  // {
+	//   if((tokens[i].type == '-' && i > 0 && tokens[i-1].type != NUM && tokens[i+1].type == NUM)
+  //     ||(tokens[i].type == '-' && i == 0))
+	//   {
+	//     //printf("%s\n", tokens[i+1].str);
+	//     tokens[i].type = TK_NOTYPE;
+	//     //tokens[i].str = tmp;
+	//     for(int j = 31 ; j > 0 ; j --)
+  //     {
+	// 	    tokens[i+1].str[j] = tokens[i+1].str[j-1];
+	//     }
+	//     tokens[i+1].str[0] = '-';
+	//     // printf("%s\n", tokens[i+1].str);
+	//     for(int j = 0 ; j < nr_token ; j ++){
+	// 	    if(tokens[j].type == TK_NOTYPE)
+	// 	    {
+	// 	      for(int k = j + 1; k < nr_token; k ++){
+	// 		      tokens[k - 1] = tokens[k];
+	// 	      }
+	// 	      nr_token -- ;
+	// 	    }
+	//     }
+	//   }
+  // }
 
     // /*
     //  * !
