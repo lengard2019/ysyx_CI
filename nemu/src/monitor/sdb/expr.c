@@ -112,25 +112,41 @@ int char2int(char s[]){
     return res;
 }
 
-void int2char(int x, char str[]){
-    int len = strlen(str);
-    memset(str, 0, len);
+void int2char(int x, char str[]) {
     int tmp_index = 0;
     int tmp_x = x;
     int x_size = 0, flag = 1;
-    while(tmp_x){
-	    tmp_x /= 10;
-	    x_size ++;
-	    flag *= 10;
+
+    // 处理负数
+    if (x < 0) {
+        str[tmp_index++] = '-';
+        x = -x;
+    }
+
+    // 计算 x 的位数
+    tmp_x = x;
+    while (tmp_x) {
+        tmp_x /= 10;
+        x_size++;
+        flag *= 10;
     }
     flag /= 10;
-    while(x)
-    {
-	    int a = x / flag; 
-	    x %= flag;
-	    flag /= 10;
-	    str[tmp_index ++] = a + '0';
+
+    // 处理 x = 0 的情况
+    if (x == 0) {
+        str[tmp_index++] = '0';
     }
+
+    // 将 x 的每一位转换为字符
+    while (x) {
+        int a = x / flag;
+        x %= flag;
+        flag /= 10;
+        str[tmp_index++] = a + '0';
+    }
+
+    // 添加字符串终止符
+    str[tmp_index] = '\0';
 }
 
 
@@ -287,7 +303,7 @@ static void token_special(){
 	    bool flag = true;
 	    int tmp = isa_reg_str2val(tokens[i].str, &flag);
 	    if(flag){
-        printf("%d\n",tmp);
+        // printf("%d\n",tmp);
 		    int2char(tmp, tokens[i].str); // transfrom the str --> $egx
         tokens[i].type = NUM;
       }
