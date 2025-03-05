@@ -404,8 +404,8 @@ static void token_special(){
   * */
   for(int i = 0 ; i < nr_token ; i ++)
   {
-    if((tokens[i].type == '*' && i > 0 && tokens[i-1].type != NUM && tokens[i-1].type != REG && tokens[i+1].type == NUM)
-	    ||(tokens[i].type == '*' && i == 0))
+    if((tokens[i].type == MULTI && i > 0 && tokens[i-1].type != NUM && tokens[i-1].type != REG && tokens[i+1].type == NUM)
+	    ||(tokens[i].type == MULTI && i == 0))
 	  {
       tokens[i].type = TK_NOTYPE;
       int tmp = char2int(tokens[i+1].str);
