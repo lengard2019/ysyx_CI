@@ -129,7 +129,7 @@ static int cmd_x(char *args){
     int len = 0;
     paddr_t addr = 0;
     sscanf(n, "%d", &len);
-    sscanf(baseaddr,"%d", &addr);
+    sscanf(baseaddr,"%x", &addr);
     for(int i = 0 ; i < len ; i ++)
     {
       printf("%x\n", paddr_read(addr,4));//addr len
