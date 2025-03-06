@@ -123,6 +123,7 @@ void int2char(int x, char str[]) {
         str[tmp_index++] = '-';
         x = -x;
     }
+    printf("%s %d",str,x);
 
     // 计算 x 的位数
     tmp_x = x;
