@@ -125,14 +125,15 @@ static int cmd_p(char *args){
 static int cmd_x(char *args){
     char* n = strtok(args," ");
     char* baseaddr = strtok(NULL," ");
+    printf("%s\n",baseaddr);
     int len = 0;
     paddr_t addr = 0;
     sscanf(n, "%d", &len);
     sscanf(baseaddr,"%x", &addr);
     for(int i = 0 ; i < len ; i ++)
     {
-        printf("%x\n", paddr_read(addr,4));//addr len
-        addr = addr + 4;
+      printf("%x\n", paddr_read(addr,4));//addr len
+      addr = addr + 4;
     }
     return 0;
 }
