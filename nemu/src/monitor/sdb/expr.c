@@ -323,6 +323,7 @@ static void token_special(){
     {
       if(tokens[i].str[0] == '0' && (tokens[i].str[1] == 'x'|| tokens[i].str[1] == 'X'))// Hex num
       {
+        printf("%s\n",tokens[i].str);
         int value = strtol(tokens[i].str, NULL, 16);
         printf("%d\n", value);
         int2char(value, tokens[i].str);
