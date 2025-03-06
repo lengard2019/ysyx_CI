@@ -117,7 +117,7 @@ void int2char(int x, char str[]) {
     int tmp_index = 0;
     int tmp_x = x;
     int x_size = 0, flag = 1;
-
+    printf("%d\n",x);
     // 处理负数
     if (x < 0) {
         str[tmp_index++] = '-';
