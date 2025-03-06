@@ -408,26 +408,19 @@ static void token_special(){
 	    ||(tokens[i].type == MULTI && i == 0))
 	  {
       tokens[i].type = TK_NOTYPE;
-      // printf("%s\n", tokens[i+1].str);
+      printf("%s\n", tokens[i+1].str);
       int tmp = char2int(tokens[i+1].str);
-      uintptr_t a = (uintptr_t)tmp;
-      // printf("%ld %d\n",a,tmp);
-      if((int*)a != NULL){
-        int value = *((int*)a);
-        int2char(value, tokens[i+1].str);
-        for(int j = 0 ; j < nr_token ; j ++){
-          if(tokens[j].type == TK_NOTYPE){
-            for(int k = j +1 ; k < nr_token ; k ++){
-              tokens[k - 1] = tokens[k];
-            }
-            nr_token -- ;
-          }
-        }
-      }
-      else
-      {
-        printf("check the address\n");
-      }      	    
+      paddr_t a = (paddr_t)tmp;
+      printf("%d %d\n",a,tmp);
+      // int2char(value, tokens[i+1].str);
+      // for(int j = 0 ; j < nr_token ; j ++){
+      //   if(tokens[j].type == TK_NOTYPE){
+      //     for(int k = j +1 ; k < nr_token ; k ++){
+      //       tokens[k - 1] = tokens[k];
+      //     }
+      //     nr_token -- ;
+      //   }
+      // }    	    
     }
   }
 }
