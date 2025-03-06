@@ -19,6 +19,7 @@
  * Type 'man regex' for more information about POSIX regex functions.
  */
 #include <regex.h>
+#include <memory/paddr.h>
 
 enum {
   TK_NOTYPE = 256, 
@@ -410,18 +411,18 @@ static void token_special(){
       tokens[i].type = TK_NOTYPE;
       // printf("%s\n", tokens[i+1].str);
       int tmp = char2int(tokens[i+1].str);
-      paddr_t a = (paddr_t)tmp;
-      printf("%d %d\n",a,tmp);
-      
-      // int2char(value, tokens[i+1].str);
-      // for(int j = 0 ; j < nr_token ; j ++){
-      //   if(tokens[j].type == TK_NOTYPE){
-      //     for(int k = j +1 ; k < nr_token ; k ++){
-      //       tokens[k - 1] = tokens[k];
-      //     }
-      //     nr_token -- ;
-      //   }
-      // }    	    
+      paddr_t addr = (paddr_t)tmp;
+      printf("%d %d\n",addr,tmp);
+      word_t value = paddr_read(addr,4);
+      int2char((int)value, tokens[i+1].str);
+      for(int j = 0 ; j < nr_token ; j ++){
+        if(tokens[j].type == TK_NOTYPE){
+          for(int k = j +1 ; k < nr_token ; k ++){
+            tokens[k - 1] = tokens[k];
+          }
+          nr_token -- ;
+        }
+      }    	    
     }
   }
 }
