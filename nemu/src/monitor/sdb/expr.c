@@ -325,7 +325,7 @@ static void token_special(){
       {
         printf("%s\n",tokens[i].str);
         int value = strtol(tokens[i].str, NULL, 16);
-        printf("%d\n", value);
+        printf("%x\n", value);
         int2char(value, tokens[i].str);
       }
       else
