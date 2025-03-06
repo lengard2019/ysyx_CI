@@ -113,17 +113,16 @@ int char2int(char s[]){
     return res;
 }
 
-void int2char(int x, char str[]) {
+void int2char(int x, char str[]) {//需要考虑溢出的情况
     int tmp_index = 0;
     int tmp_x = x;
     int x_size = 0, flag = 1;
-    printf("%d\n",x);
+
     // 处理负数
     if (x < 0) {
         str[tmp_index++] = '-';
         x = -x;
     }
-    printf("%s %d\n",str,x);
 
     // 计算 x 的位数
     tmp_x = x;
