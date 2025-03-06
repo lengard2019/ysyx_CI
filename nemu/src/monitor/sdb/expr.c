@@ -324,14 +324,14 @@ static void token_special(){
 	    ||(tokens[i].type == MULTI && i == 0))
 	  {
       tokens[i].type = TK_NOTYPE;
-      printf("mark\n");
+      // printf("mark\n");
       // printf("%s\n", tokens[i+1].str);
-      printf("%s\n",tokens[i+1].str);
+      // printf("%s\n",tokens[i+1].str);
       paddr_t addr = 0;
       sscanf(tokens[i+1].str,"%x", &addr);
-      printf("%d\n",addr);
+      // printf("%d\n",addr);
       word_t value = paddr_read(addr,4);
-      printf("%d\n",value);
+      // printf("%d\n",value);
       int2char((int)value, tokens[i+1].str);
       printf("%s\n",tokens[i+1].str);
       for(int j = 0 ; j < nr_token ; j ++){
@@ -400,35 +400,6 @@ static void token_special(){
 	    }
 	  }
   }
-
-    // /*
-    //  * !
-    //  *  
-  //    */
-  // for(int i = 0 ; i < nr_token ; i ++)
-  // {
-	//   if(tokens[i].type == NOT)
-	//   {
-	//     tokens[i].type = TK_NOTYPE;//空格
-	//     int tmp = char2int(tokens[i+1].str);
-	//     if(tmp == 0){
-	// 	    memset(tokens[i+1].str, 0 ,sizeof(tokens[i+1].str));
-	// 	    tokens[i+1].str[0] = '1';
-	//     }
-	//     else{
-	// 	    memset(tokens[i+1].str, 0 , sizeof(tokens[i+1].str));
-	//     }
-	//     for(int j = 0 ; j < nr_token ; j ++){
-	// 	    if(tokens[j].type == TK_NOTYPE)
-	// 	    {
-	// 	      for(int k = j + 1 ; k < nr_token ; k ++){
-	// 		      tokens[k - 1] = tokens[k];
-	// 	      }
-	// 	    nr_token -- ;
-	// 	    }
-	//     }
-	//   }
-  // }
 }
 
 
