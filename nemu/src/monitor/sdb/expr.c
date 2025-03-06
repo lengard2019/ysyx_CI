@@ -305,7 +305,7 @@ static void token_special(){
 	    int tmp = isa_reg_str2val(tokens[i].str, &flag);
 	    if(flag){
         // printf("%d\n",tmp);
-		    int2char(tmp, tokens[i].str); // transfrom the str --> $egx
+		    int2char(tmp, tokens[i].str);
         tokens[i].type = NUM;
       }
       else{
@@ -325,7 +325,7 @@ static void token_special(){
       {
         printf("%s\n",tokens[i].str);
         int value = strtol(tokens[i].str, NULL, 16);
-        printf("%x\n", value);
+        printf("%d\n", value);
         int2char(value, tokens[i].str);
       }
       else
