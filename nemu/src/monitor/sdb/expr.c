@@ -414,7 +414,9 @@ static void token_special(){
       paddr_t addr = (paddr_t)tmp;
       printf("%d %d\n",addr,tmp);
       word_t value = paddr_read(addr,4);
+      printf("%d\n",value);
       int2char((int)value, tokens[i+1].str);
+      printf("%s\n",tokens[i+1].str);
       for(int j = 0 ; j < nr_token ; j ++){
         if(tokens[j].type == TK_NOTYPE){
           for(int k = j +1 ; k < nr_token ; k ++){
