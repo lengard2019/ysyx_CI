@@ -412,7 +412,7 @@ static void token_special(){
       int tmp = char2int(tokens[i+1].str);
       uintptr_t a = (uintptr_t)tmp;
       // printf("%ld %d\n",a,tmp);
-      if((int*)a != NULL){//硬码地址？基本都是非法地址吧
+      if((int*)a != NULL){
         int value = *((int*)a);
         int2char(value, tokens[i+1].str);
         for(int j = 0 ; j < nr_token ; j ++){
@@ -605,10 +605,9 @@ word_t expr(char *e, bool *success) {
     tokens[i].type = 0;
     memset(tokens[i].str, '\0', sizeof(tokens[i].str));
   }
-
   return result;
+  
 }
-
 
 
 //for test
