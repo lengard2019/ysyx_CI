@@ -408,7 +408,7 @@ static void token_special(){
 	    ||(tokens[i].type == MULTI && i == 0))
 	  {
       tokens[i].type = TK_NOTYPE;
-      printf("%s\n", tokens[i+1].str);
+      // printf("%s\n", tokens[i+1].str);
       int tmp = char2int(tokens[i+1].str);
       paddr_t a = (paddr_t)tmp;
       printf("%d %d\n",a,tmp);
