@@ -412,6 +412,7 @@ static void token_special(){
       int tmp = char2int(tokens[i+1].str);
       paddr_t a = (paddr_t)tmp;
       printf("%d %d\n",a,tmp);
+      
       // int2char(value, tokens[i+1].str);
       // for(int j = 0 ; j < nr_token ; j ++){
       //   if(tokens[j].type == TK_NOTYPE){
