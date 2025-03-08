@@ -113,8 +113,8 @@ static int cmd_p(char *args){
         return 0;
     }
 
-    bool *a = false;
-    word_t result = expr(args,a);
+    bool a = false;
+    word_t result = expr(args,&a);
     // printf("mark\n");
     printf("%d\n", result);
     
