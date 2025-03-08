@@ -33,4 +33,8 @@ void create_watchpoint(char* args);
 
 void delete_watchpoint(int no);
 
+bool watchpoint_diff(int i);
+
+void print_watchpoint(int i);
+
 #endif

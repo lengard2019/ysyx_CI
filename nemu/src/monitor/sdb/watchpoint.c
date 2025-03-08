@@ -114,4 +114,40 @@ void sdb_watchpoint_display(){
   } 
 }
 
+bool watchpoint_diff(int i){
 
+  if(wp_pool[i].flag)
+  {
+    bool success = false;
+    int tmp = expr(wp_pool[i].expr,&success);
+    if(success){
+      if(tmp != wp_pool[i].old_val)
+      {
+        return true;
+      }
+      else
+      {
+        return false;
+      }
+    }
+    else{
+      printf("watchpoint %d expr error.\n", i);
+      assert(0);
+      return false;
+    }
+  }
+  else{
+    return false;
+  }
+}
+  
+void print_watchpoint(int i){
+
+  if(wp_pool[i].flag){
+    printf("Watchpoint.No: %d, expr = \"%s\", old_value = %d, new_value = %d\n",
+          wp_pool[i].NO, wp_pool[i].expr,wp_pool[i].old_val, wp_pool[i].new_val);
+  }
+  else{
+    printf("The watchpoint is not used\n");
+  }
+}
