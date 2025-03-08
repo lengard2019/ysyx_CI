@@ -116,6 +116,7 @@ static int cmd_p(char *args){
     bool *a = false;
     word_t result = expr(args,a);
     printf("%d\n", result);
+    printf("mark\n");
 
     // for test
     // for(int i = 0; i < 100; i++){
