@@ -571,6 +571,7 @@ word_t expr(char *e, bool *success) {
 
   // /* TODO: Insert codes to evaluate the expression. */
   result = eval(0, nr_token - 1);
+  *success = true;
   for (int i = 0; i < nr_token; i++){
     tokens[i].type = 0;
     memset(tokens[i].str, '\0', sizeof(tokens[i].str));
