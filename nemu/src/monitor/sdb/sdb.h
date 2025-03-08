@@ -27,5 +27,10 @@ typedef struct token {
   char str[32];
 } Token;
 
+void sdb_watchpoint_display();
+
+void create_watchpoint(char* args);
+
+void delete_watchpoint(int no);
 
 #endif
