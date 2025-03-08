@@ -552,7 +552,7 @@ word_t expr(char *e, bool *success) {
 
   // /* TODO: Insert codes to evaluate the expression. */
   result = eval(0, nr_token - 1);
-  printf("mark\n");
+  printf("mark222\n");
   *success = true;
   printf("mark\n");
   for (int i = 0; i < nr_token; i++){
