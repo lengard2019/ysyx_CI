@@ -308,9 +308,7 @@ static void token_special(){
 	    ||(tokens[i].type == MULTI && i == 0))
 	  {
       tokens[i].type = TK_NOTYPE;
-      // printf("mark\n");
-      // printf("%s\n", tokens[i+1].str);
-      // printf("%s\n",tokens[i+1].str);
+
       paddr_t addr = 0;
       sscanf(tokens[i+1].str,"%x", &addr);
       // printf("%d\n",addr);
@@ -386,8 +384,6 @@ static void token_special(){
 	  }
   }
 }
-
-
 
 static bool check_parentheses(int p, int q)//判断总式或子式是否符合要求
 {
@@ -556,7 +552,9 @@ word_t expr(char *e, bool *success) {
 
   // /* TODO: Insert codes to evaluate the expression. */
   result = eval(0, nr_token - 1);
-  // *success = true;
+  printf("mark\n");
+  *success = true;
+  printf("mark\n");
   for (int i = 0; i < nr_token; i++){
     tokens[i].type = 0;
     memset(tokens[i].str, '\0', sizeof(tokens[i].str));
