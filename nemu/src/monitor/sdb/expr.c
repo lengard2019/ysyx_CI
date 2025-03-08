@@ -329,7 +329,7 @@ static void token_special(){
       }    	    
     }
   }
-  
+  printf("mark\n");
   /*
    * Init the tokens NUM
   */
