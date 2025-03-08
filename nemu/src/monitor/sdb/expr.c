@@ -534,7 +534,6 @@ uint32_t eval(int p, int q) {
 
 word_t expr(char *e, bool *success) {
   if (!make_token(e)) {
-    printf("mark333\n");
     *success = false;
     return 0;
   }
@@ -553,9 +552,7 @@ word_t expr(char *e, bool *success) {
 
   // /* TODO: Insert codes to evaluate the expression. */
   result = eval(0, nr_token - 1);
-  printf("mark222\n");
   *success = true;
-  printf("mark\n");
   for (int i = 0; i < nr_token; i++){
     tokens[i].type = 0;
     memset(tokens[i].str, '\0', sizeof(tokens[i].str));
