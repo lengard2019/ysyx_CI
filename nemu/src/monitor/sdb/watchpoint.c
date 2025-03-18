@@ -95,7 +95,7 @@ void create_watchpoint(char* args){
     p -> old_val = tmp;
   } 
   else{
-    printf("创建watchpoint的时候expr求值出现问题\n");
+    printf("expr wrong\n");
   } 
   printf("Create watchpoint No.%d success.\n", p -> NO);
 }
