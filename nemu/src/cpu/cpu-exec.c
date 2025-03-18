@@ -50,6 +50,7 @@ static void trace_and_difftest(Decode *_this, vaddr_t dnpc) {
       nemu_state.state = NEMU_STOP;
       print_watchpoint(i);
     }
+    print_watchpoint(i);
     wp_init(i);
   }
   
