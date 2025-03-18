@@ -18,6 +18,7 @@
 #include <cpu/difftest.h>
 #include <locale.h>
 #include "../monitor/sdb/sdb.h"
+#include <memory/vaddr.h>
 
 /* The assembly code of instructions executed is only output to the screen
  * when the number of instructions executed is less than this value.
@@ -121,6 +122,13 @@ void cpu_exec(uint64_t n) {
   uint64_t timer_start = get_time();
 
   execute(n);
+
+  //test watchpoint
+  word_t tmp = vaddr_read(0x80000000,4);
+  tmp ++;
+  vaddr_write(0x80000000,4,tmp);
+
+
 
   uint64_t timer_end = get_time();
   g_timer += timer_end - timer_start;
