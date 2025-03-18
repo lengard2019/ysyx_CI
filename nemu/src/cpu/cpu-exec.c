@@ -126,11 +126,9 @@ void cpu_exec(uint64_t n) {
   execute(n);
 
   //test watchpoint
-  word_t tmp = vaddr_read(0x80000000,4);
-  tmp ++;
-  vaddr_write(0x80000000,4,tmp);
-
-
+  // word_t tmp = vaddr_read(0x80000000,4);
+  // tmp ++;
+  // vaddr_write(0x80000000,4,tmp);
 
   uint64_t timer_end = get_time();
   g_timer += timer_end - timer_start;
