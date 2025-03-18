@@ -126,6 +126,7 @@ void cpu_exec(uint64_t n) {
   //test watchpoint
   word_t tmp = vaddr_read(0x80000000,4);
   tmp ++;
+  printf("%x\n",tmp);
   vaddr_write(0x80000000,4,tmp);
 
 
