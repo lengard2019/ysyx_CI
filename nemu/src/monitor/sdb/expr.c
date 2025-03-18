@@ -327,7 +327,6 @@ static void token_special(){
       }    	    
     }
   }
-  printf("%s\n", tokens[1].str);
 
   /*
    * Init the tokens NUM
@@ -345,8 +344,10 @@ static void token_special(){
       {
         for(int j = 0; j < strlen(tokens[i].str); j++)
         {
+          printf("%s\n",tokens[i].str);
           if(tokens[i].str[j] < '0' || tokens[i].str[j] > '9')
           {
+            
             printf("the number of position %d is wrong\n", i);
             assert(0);
           }
