@@ -109,18 +109,16 @@ int char2int(char s[]){
     return res;
 }
 
-void int2char(int x, char str[]) {//需要考虑溢出的情况
+void int2char(int x, char str[]) {
     int tmp_index = 0;
     int tmp_x = x;
     int x_size = 0, flag = 1;
 
-    // 处理负数
     if (x < 0) {
         str[tmp_index++] = '-';
         x = -x;
     }
 
-    // 计算 x 的位数
     tmp_x = x;
     while (tmp_x) {
         tmp_x /= 10;
@@ -129,12 +127,11 @@ void int2char(int x, char str[]) {//需要考虑溢出的情况
     }
     flag /= 10;
 
-    // 处理 x = 0 的情况
+
     if (x == 0) {
         str[tmp_index++] = '0';
     }
 
-    // 将 x 的每一位转换为字符
     while (x) {
         int a = x / flag;
         x %= flag;
@@ -142,7 +139,6 @@ void int2char(int x, char str[]) {//需要考虑溢出的情况
         str[tmp_index++] = a + '0';
     }
 
-    // 添加字符串终止符
     str[tmp_index] = '\0';
 }
 
