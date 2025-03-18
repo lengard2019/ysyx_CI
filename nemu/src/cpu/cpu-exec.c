@@ -47,7 +47,6 @@ static void trace_and_difftest(Decode *_this, vaddr_t dnpc) {
     wp_init(i);
     if(watchpoint_diff(i) == true)
     {
-      printf("mark\n");
       nemu_state.state = NEMU_STOP;
       print_watchpoint(i);
     }
