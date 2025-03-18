@@ -44,13 +44,15 @@ static void trace_and_difftest(Decode *_this, vaddr_t dnpc) {
 
   // printf("mark\n");
   for(int i = 0; i < 32;i++){
-    wp_init(i);
+    
     if(watchpoint_diff(i) == true)
     {
       nemu_state.state = NEMU_STOP;
       print_watchpoint(i);
     }
+    wp_init(i);
   }
+  
 }
 
 static void exec_once(Decode *s, vaddr_t pc) {
