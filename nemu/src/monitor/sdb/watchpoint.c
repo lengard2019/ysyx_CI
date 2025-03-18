@@ -147,7 +147,7 @@ bool watchpoint_diff(int i){
 void print_watchpoint(int i){
 
   if(wp_pool[i].flag){
-    printf("Watchpoint.No: %d, expr = \"%s\", old_value = %d, new_value = %d\n",
+    printf("Watchpoint.No: %d, expr = \"%s\", old_value = %x, new_value = %x\n",
           wp_pool[i].NO, wp_pool[i].expr,wp_pool[i].old_val, wp_pool[i].new_val);
   }
   else{
