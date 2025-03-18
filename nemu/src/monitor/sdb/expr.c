@@ -300,7 +300,7 @@ static void token_special(){
   }
   /*
   * TODO
-  * Jie yin yong
+  * 内存
   * */
   for(int i = 0 ; i < nr_token ; i ++)
   {
