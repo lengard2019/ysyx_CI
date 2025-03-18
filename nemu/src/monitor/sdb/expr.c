@@ -344,7 +344,7 @@ static void token_special(){
       {
         for(int j = 0; j < strlen(tokens[i].str); j++)
         {
-          printf("%s\n",tokens[i].str);
+          // printf("%s\n",tokens[i].str);
           if(tokens[i].str[j] < '0' || tokens[i].str[j] > '9')
           {
             if(tokens[i].str[j] != '-'){
