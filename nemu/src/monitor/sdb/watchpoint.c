@@ -120,7 +120,7 @@ bool watchpoint_diff(int i){
   {
     bool success = false;
     int tmp = expr(wp_pool[i].expr,&success);
-    printf("%x\n",tmp);
+    // printf("%x\n",tmp);
     if(success){
       if(tmp != wp_pool[i].old_val)
       {
