@@ -347,9 +347,10 @@ static void token_special(){
           printf("%s\n",tokens[i].str);
           if(tokens[i].str[j] < '0' || tokens[i].str[j] > '9')
           {
-            
-            printf("the number of position %d is wrong\n", i);
-            assert(0);
+            if(tokens[i].str[j] != '-'){
+              printf("the number of position %d is wrong\n", i);
+              assert(0);
+            }           
           }
         }
       }
