@@ -46,6 +46,7 @@ static void trace_and_difftest(Decode *_this, vaddr_t dnpc) {
   for(int i = 0; i < 32;i++){
     if(watchpoint_diff(i) == true)
     {
+      printf("mark\n");
       nemu_state.state = NEMU_STOP;
       print_watchpoint(i);
     }
@@ -126,7 +127,6 @@ void cpu_exec(uint64_t n) {
   //test watchpoint
   word_t tmp = vaddr_read(0x80000000,4);
   tmp ++;
-  printf("%x\n",tmp);
   vaddr_write(0x80000000,4,tmp);
 
 
