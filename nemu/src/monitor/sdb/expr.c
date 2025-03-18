@@ -327,6 +327,7 @@ static void token_special(){
       }    	    
     }
   }
+  printf("%s", tokens[1].str);
 
   /*
    * Init the tokens NUM
