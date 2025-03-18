@@ -94,7 +94,6 @@ void create_watchpoint(char* args){
   if(success){
     p -> old_val = tmp;
     p -> new_val = tmp;
-    printf("%d\n",p -> old_val);
   } 
   else{
     printf("expr wrong\n");
