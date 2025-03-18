@@ -124,6 +124,7 @@ bool watchpoint_diff(int i){
     if(success){
       if(tmp != wp_pool[i].old_val)
       {
+        wp_pool[i].new_val = tmp;
         return true;
       }
       else
@@ -150,5 +151,11 @@ void print_watchpoint(int i){
   }
   else{
     printf("The watchpoint is not used\n");
+  }
+}
+
+void wp_init(int i){
+  if(wp_pool[i].flag){
+    wp_pool[i].old_val = wp_pool[i].new_val;
   }
 }
