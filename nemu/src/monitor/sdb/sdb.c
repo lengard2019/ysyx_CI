@@ -101,6 +101,9 @@ static int cmd_test(char *args){
 
   char* e = get_expr(2);
   printf("%s\n",e);
+  bool a = false;
+  word_t result = expr(e,&a);
+  printf("%d\n", result);
   return 0;
 }
 
