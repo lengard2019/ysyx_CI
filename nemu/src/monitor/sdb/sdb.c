@@ -98,8 +98,10 @@ static struct {
 
 
 static int cmd_test(char *args){
-
-  char* e = get_expr(2);
+  char* n = strtok(args," ");
+  int len = 0;
+  sscanf(n, "%d", &len);
+  char* e = get_expr(len);
   printf("%s\n",e);
   bool a = false;
   word_t result = expr(e,&a);
