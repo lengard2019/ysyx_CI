@@ -608,6 +608,7 @@ static void gen_rand_expr() {
     index_buf = 0;
     memset(buf, 0, sizeof(buf));
     //    buf[0] = '\0';
+    printf("mark\n");
     printf("%d\n",index_buf);	
     if(index_buf > 32)
        	printf("overSize\n");
