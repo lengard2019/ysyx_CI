@@ -99,8 +99,9 @@ static struct {
 
 static int cmd_test(char *args){
 
+  char* e = gen_expr();
+  printf("%s",e);
   return -1;
-
 }
 
 
