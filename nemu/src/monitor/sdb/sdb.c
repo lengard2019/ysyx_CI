@@ -71,6 +71,8 @@ static int cmd_w(char *args);
 
 static int cmd_d(char *args);
 
+static int cmd_test(char *args);
+
 static struct {
   const char *name;
   const char *description;
@@ -84,7 +86,8 @@ static struct {
   { "x", "Scan ddr", cmd_x },
   { "p", "Mathematical expression evaluation", cmd_p },
   { "w", "Set your watchponits", cmd_w },
-  { "d", "Delete watchponits", cmd_d }
+  { "d", "Delete watchponits", cmd_d },
+  { "test", "test", cmd_test }
 
 
   /* TODO: Add more commands */
@@ -93,6 +96,12 @@ static struct {
 
 #define NR_CMD ARRLEN(cmd_table)
 
+
+static int cmd_test(char *args){
+
+  return -1;
+
+}
 
 
 static int cmd_si(char *args){
