@@ -442,13 +442,13 @@ uint32_t eval(int p, int q) {
           }
           i++; 
         }
-      if(tokens[i].type == RIGHT)//跳过括号后不应该先出现右括号
-        {
-          printf("%d\n",i);
-          printf("wrong parentheses used\n");
-          assert(0);
-          return -1;
-        }
+      // if(tokens[i].type == RIGHT)//跳过括号后不应该先出现右括号
+      //   {
+      //     printf("%d\n",i);
+      //     printf("wrong parentheses used\n");
+      //     assert(0);
+      //     return -1;
+      //   }
       if(!flag && tokens[i].type == LEQ)
         {
           flag = true;
