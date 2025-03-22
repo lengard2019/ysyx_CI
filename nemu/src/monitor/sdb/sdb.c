@@ -100,7 +100,7 @@ static struct {
 static int cmd_test(char *args){
 
   char* e = get_expr(2);
-  printf("%s",e);
+  printf("%s\n",e);
   return -1;
 }
 
@@ -127,14 +127,6 @@ static int cmd_p(char *args){
     word_t result = expr(args,&a);
     // printf("mark\n");
     printf("%d\n", result);
-    
-    // for test
-    // for(int i = 0; i < 100; i++){
-    //   char *e = gen_expr();
-    //   bool *a = false;
-    //   word_t result = expr(e,a);
-    //   printf("%d\n", result);
-    // }
 
     return 0;
 }
