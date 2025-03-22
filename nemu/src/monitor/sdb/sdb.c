@@ -101,7 +101,7 @@ static int cmd_test(char *args){
 
   char* e = get_expr(2);
   printf("%s\n",e);
-  return -1;
+  return 0;
 }
 
 
