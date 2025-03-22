@@ -325,7 +325,7 @@ static void token_special(){
   }
 
   /*
-   * Init the tokens NUM
+   * NUM
   */
   for(int i = 0 ; i < nr_token ; i ++)
   {
