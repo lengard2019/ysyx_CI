@@ -412,6 +412,7 @@ uint32_t eval(int p, int q) {
   if (p > q) {
     /* Bad expression */
     // printf("%d %d %d\n", nr_token, p, q);
+    printf("Bad expression\n");
     assert(0);
     return -1;
   }
