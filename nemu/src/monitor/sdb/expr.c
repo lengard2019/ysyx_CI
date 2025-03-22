@@ -442,12 +442,12 @@ uint32_t eval(int p, int q) {
           }
           i++; 
         }
-      // if(tokens[i].type == RIGHT)//跳过括号后不应该先出现右括号
-      //   {
-      //     printf("wrong parentheses used\n");
-      //     assert(0);
-      //     return -1;
-      //   }
+      if(tokens[i].type == RIGHT)//跳过括号后不应该先出现右括号
+        {
+          printf("wrong parentheses used\n");
+          assert(0);
+          return -1;
+        }
       if(!flag && tokens[i].type == LEQ)
         {
           flag = true;
@@ -550,7 +550,7 @@ word_t expr(char *e, bool *success) {
   }
 
   // /* TODO: Insert codes to evaluate the expression. */
-  result = eval(0, nr_token - 1);
+  result = eval(1, nr_token - 2);
   *success = true;
   for (int i = 0; i < nr_token; i++){
     tokens[i].type = 0;
