@@ -138,7 +138,7 @@ static int cmd_x(char *args){
     sscanf(baseaddr,"%x", &addr);
     for(int i = 0 ; i < len ; i ++)
     {
-      printf("%x\n", vaddr_read(addr,4));//addr len
+      printf("%08x\n", vaddr_read(addr,4));//addr len
       addr = addr + 4;
     }
     return 0;
