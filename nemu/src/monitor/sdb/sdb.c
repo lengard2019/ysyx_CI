@@ -99,7 +99,7 @@ static struct {
 
 static int cmd_test(char *args){
 
-  char* e = gen_expr();
+  char* e = get_expr(2);
   printf("%s",e);
   return -1;
 }
