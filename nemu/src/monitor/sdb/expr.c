@@ -513,7 +513,6 @@ uint32_t eval(int p, int q) {
         if (val2 == 0){
           printf("division can't be 0\n");
           is_division0 = true;
-          printf("%d\n",is_division0);
           return -1;
         }
         else{
