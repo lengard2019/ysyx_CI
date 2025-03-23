@@ -99,13 +99,20 @@ static struct {
 
 static int cmd_test(char *args){
   char* n = strtok(args," ");
-  int len = 0;
-  sscanf(n, "%d", &len);
-  char* e = get_expr(len);
+  int index = 0;
+  sscanf(n, "%d", &index);
+  char* e = get_expr(index);
   printf("%s\n",e);
   bool a = false;
-  word_t result = expr(e,&a);
-  printf("%d\n", result);
+  bool is_division0 = false;
+  word_t result = expr(args,&a);
+  is_division0 = division();
+    if (is_division0 == true){
+      printf("-1\n");
+    }
+    else{
+      printf("%d\n", result);
+    }
   return 0;
 }
 
@@ -133,7 +140,6 @@ static int cmd_p(char *args){
     word_t result = expr(args,&a);
     // printf("mark\n");
     is_division0 = division();
-    printf("cmd_p %d\n",is_division0);
     if (is_division0 == true){
       printf("-1\n");
     }
