@@ -138,7 +138,6 @@ static int cmd_p(char *args){
     bool is_division0 = false;
     bool a = false;
     word_t result = expr(args,&a);
-    // printf("mark\n");
     is_division0 = division();
     if (is_division0 == true){
       printf("-1\n");
