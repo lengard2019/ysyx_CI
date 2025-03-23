@@ -540,10 +540,10 @@ word_t expr(char *e, bool *success) {
 
   token_special();//特殊情况
   word_t result = 0;
-  // printf("%d\n", NR_REGEX);
-  // for (int i = 0; i < nr_token; i++){
-  //   printf("%d %s\n",tokens[i].type, tokens[i].str);
-  // }
+  printf("%d\n", NR_REGEX);
+  for (int i = 0; i < nr_token; i++){
+    printf("%d %s\n",tokens[i].type, tokens[i].str);
+  }
 
   if(tokens[0].type != LEFT  || tokens[nr_token-1].type != RIGHT){
     printf("please add a pair of parentheses\n");
