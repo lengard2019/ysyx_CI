@@ -567,8 +567,7 @@ word_t expr(char *e, bool *success) {
 }
 
 bool division(){
-  printf("mark\n");
-  printf("%d\n",is_division0);
+
   return is_division0;
 }
 
