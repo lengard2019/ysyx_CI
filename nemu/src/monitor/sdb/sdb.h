@@ -20,6 +20,8 @@
 
 word_t expr(char *e, bool *success);
 
+bool division();
+
 char* get_expr(int i);
 
 typedef struct token {

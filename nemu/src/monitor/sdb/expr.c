@@ -408,6 +408,8 @@ static bool check_parentheses(int p, int q)//判断总式或子式是否符合�
   return true;
 }
 
+static bool is_division0 = false;
+
 uint32_t eval(int p, int q) {
   if (p > q) {
     /* Bad expression */
@@ -510,6 +512,7 @@ uint32_t eval(int p, int q) {
       case DIV: 
         if (val2 == 0){
           printf("division can't be 0\n");
+          is_division0 = true;
           return -1;
         }
         else{
@@ -537,6 +540,7 @@ word_t expr(char *e, bool *success) {
     *success = false;
     return 0;
   }
+  is_division0 = false;
 
   token_special();//特殊情况
   word_t result = 0;
@@ -561,6 +565,9 @@ word_t expr(char *e, bool *success) {
   
 }
 
+bool division(){
+  return is_division0;
+}
 
 //for test
 static char* test_cases[] = {

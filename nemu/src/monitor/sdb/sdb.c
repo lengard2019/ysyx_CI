@@ -128,10 +128,17 @@ static int cmd_p(char *args){
         return 0;
     }
 
+    bool is_division0 = false;
     bool a = false;
     word_t result = expr(args,&a);
     // printf("mark\n");
-    printf("%d\n", result);
+    is_division0 = division();
+    if (is_division0 == true){
+      printf("-1\n");
+    }
+    else{
+      printf("%d\n", result);
+    }
 
     return 0;
 }
