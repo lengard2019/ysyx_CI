@@ -133,6 +133,7 @@ static int cmd_p(char *args){
     word_t result = expr(args,&a);
     // printf("mark\n");
     is_division0 = division();
+    printf("cmd_p %d\n",is_division0);
     if (is_division0 == true){
       printf("-1\n");
     }
