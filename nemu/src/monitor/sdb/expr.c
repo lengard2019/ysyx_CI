@@ -448,6 +448,8 @@ uint32_t eval(int p, int q) {
      * For now this token should be a number.
      * Return the value of the number.
      */
+    printf("%s\n",tokens[p].str);
+    printf("%d\n",atoi(tokens[p].str));
     return atoi(tokens[p].str);
   }
   else if (check_parentheses(p, q) == true) {
