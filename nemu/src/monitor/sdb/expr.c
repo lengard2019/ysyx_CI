@@ -498,7 +498,7 @@ uint32_t eval(int p, int q) {
       }
     }
     int op_type =  tokens[op].type;
-    // printf("501 %d %d\n",p,op);
+    printf("501 %d %d\n",p,op);
     uint32_t val1 = eval(p, op - 1);
     uint32_t val2 = eval(op + 1, q);
 
@@ -596,7 +596,7 @@ static char* test_cases[] = {
   "(4 + 3)) * ((2 - 1)",//21
   "(4 + 3) * (2 - 1)",//22
   "((3 + 5) * (2 - 1) / 2)",//23 wrong
-  "(((3 + 5) * 2) - (6 / 3))",//24
+  "(((3 + 5) * 2) - (6 / 3))",//24 wrong
   "((1 + 2) * (5 + 4) / (5 - 2))",//25 wrong
   "((1 + 2) * 3) + ((4 - 6) / 2))",//26 wrong
 };
