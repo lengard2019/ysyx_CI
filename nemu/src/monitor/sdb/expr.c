@@ -500,7 +500,7 @@ uint32_t eval(int p, int q) {
     int op_type =  tokens[op].type;
     printf("501 %d %d\n",p,op - 1);
     uint32_t val1 = eval(p, op - 1);
-    printf("501 %d %d\n",op + 1,q);
+    printf("503 %d %d\n",op + 1,q);
     uint32_t val2 = eval(op + 1, q);
 
     switch (op_type) {
