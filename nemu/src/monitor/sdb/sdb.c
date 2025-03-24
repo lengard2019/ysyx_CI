@@ -143,7 +143,7 @@ static int cmd_p(char *args){
       printf("-1\n");
     }
     else{
-      printf("%d\n", result);
+      printf("%x\n", result);
     }
 
     return 0;
