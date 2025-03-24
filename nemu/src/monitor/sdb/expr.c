@@ -448,8 +448,8 @@ uint32_t eval(int p, int q) {
      * For now this token should be a number.
      * Return the value of the number.
      */
-    printf("%s\n",tokens[p].str);
-    printf("%d\n",atoi(tokens[p].str));
+    // printf("%s\n",tokens[p].str);
+    // printf("%d\n",atoi(tokens[p].str));
     return atoi(tokens[p].str);
   }
   else if (check_parentheses(p, q) == true) {
@@ -546,7 +546,7 @@ uint32_t eval(int p, int q) {
           return -1;
         }
         else{
-          printf("%d\n",(val1/val2));
+          printf("%d\n",(0 - val1));
           return val1 / val2;
         }
       case TK_EQ:
