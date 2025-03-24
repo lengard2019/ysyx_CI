@@ -359,7 +359,7 @@ static void token_special(){
 
   for(int i = 0 ; i < nr_token ; i ++)
   {
-	  if((tokens[i].type == MINUS && i > 0 && tokens[i-1].type != NUM && tokens[i+1].type == NUM)
+	  if((tokens[i].type == MINUS && i > 0 && tokens[i-1].type != NUM && tokens[i-1].type != RIGHT && tokens[i+1].type == NUM)
       ||(tokens[i].type == MINUS && i == 0))
 	  {
 	    //printf("%s\n", tokens[i+1].str);
