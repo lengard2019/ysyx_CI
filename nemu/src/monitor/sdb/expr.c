@@ -558,7 +558,7 @@ word_t expr(char *e, bool *success) {
   }
 
   // /* TODO: Insert codes to evaluate the expression. */
-  result = eval(0, nr_token - 1);
+  result = eval(1, nr_token - 2);
   *success = true;
   for (int i = 0; i < nr_token; i++){
     tokens[i].type = 0;
