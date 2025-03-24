@@ -413,7 +413,7 @@ static bool check_parentheses(int p, int q)
     return false;
   }
   int match = 0;
-  for (int i = p; i < q; i++){
+  for (int i = p + 1; i < q - 1; i++){
     if(tokens[i].type == LEFT){
       match++;
     }
