@@ -468,7 +468,7 @@ uint32_t eval(int p, int q) {
           while(tokens[i].type != RIGHT){
             i ++;//若没有找到，将返回到Bad expression
           }
-          i++; 
+          // i++; 
         }
       // if(tokens[i].type == RIGHT)//跳过括号后不应该先出现右括号
       //   {
