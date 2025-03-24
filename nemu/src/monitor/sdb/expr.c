@@ -544,7 +544,7 @@ word_t expr(char *e, bool *success) {
 
   token_special();//特殊情况
   word_t result = 0;
-  printf("%d\n", NR_REGEX);
+  printf("%d\n", nr_token);
   for (int i = 0; i < nr_token; i++){
     printf("%d %s\n",tokens[i].type, tokens[i].str);
   }
@@ -555,7 +555,7 @@ word_t expr(char *e, bool *success) {
   }
 
   // /* TODO: Insert codes to evaluate the expression. */
-  result = eval(1, nr_token - 2);
+  result = eval(0, nr_token - 1);
   *success = true;
   for (int i = 0; i < nr_token; i++){
     tokens[i].type = 0;
