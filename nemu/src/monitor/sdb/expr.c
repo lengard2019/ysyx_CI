@@ -407,13 +407,13 @@ static void token_special(){
 //   }
 //   return true;
 // }
-static bool check_parentheses(int p, int q)
+static bool check_parentheses(int p, int q)// 0,12
 {
   if(tokens[p].type != LEFT  || tokens[q].type != RIGHT){
     return false;
   }
   int match = 0;
-  for (int i = p + 1 ; i < q; i++){
+  for (int i = p + 1; i < q; i++){
     if(tokens[i].type == LEFT){
       match++;
     }
@@ -577,8 +577,8 @@ word_t expr(char *e, bool *success) {
     printf("%d %s\n",tokens[i].type, tokens[i].str);
   }
 
-  if(tokens[0].type != LEFT  || tokens[nr_token - 1].type != RIGHT){
-    printf("please add a pair of parentheses\n");
+  if(check_parentheses(0, nr_token - 1) == false){
+    printf("wrong parentheses used\n");
     return -1;
   }
 
