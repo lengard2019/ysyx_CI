@@ -546,7 +546,7 @@ uint32_t eval(int p, int q) {
           return -1;
         }
         else{
-          printf("%d\n",val1/val2);
+          printf("%d\n",(-4/2));
           return val1 / val2;
         }
       case TK_EQ:
