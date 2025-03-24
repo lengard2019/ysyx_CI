@@ -384,29 +384,54 @@ static void token_special(){
   }
 }
 
+// static bool check_parentheses(int p, int q)
+// {
+//   if(tokens[p].type != LEFT  || tokens[q].type != RIGHT)
+//     return false;
+//   int l = p , r = q;
+//   while(l < r)
+//   {
+//     if(tokens[l].type == LEFT){
+//       if(tokens[r].type == RIGHT)
+//         {
+//           l ++ , r --;
+//           continue;
+//         }
+
+//       else
+//         r --;
+//     }
+//     else if(tokens[l].type == RIGHT)
+//       return false;
+//     else l ++;
+//   }
+//   return true;
+// }
 static bool check_parentheses(int p, int q)
 {
-  if(tokens[p].type != LEFT  || tokens[q].type != RIGHT)
+  if(tokens[p].type != LEFT  || tokens[q].type != RIGHT){
     return false;
-  int l = p , r = q;
-  while(l < r)
-  {
-    if(tokens[l].type == LEFT){
-      if(tokens[r].type == RIGHT)
-        {
-          l ++ , r --;
-          continue;
-        }
-
-      else
-        r --;
-    }
-    else if(tokens[l].type == RIGHT)
-      return false;
-    else l ++;
   }
-  return true;
+  int match = 0;
+  for (int i = p; i < q; i++){
+    if(tokens[i].type == LEFT){
+      match++;
+    }
+    else if(tokens[i].type == RIGHT){
+      match--;
+    }
+    if(match < 0){
+      return false;
+    }
+  }
+  if(match == 0){
+    return true;
+  } 
+  else{
+    return false;
+  }
 }
+
 
 static bool is_division0 = false;
 
