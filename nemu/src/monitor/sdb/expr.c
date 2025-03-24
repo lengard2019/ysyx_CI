@@ -418,7 +418,7 @@ static bool check_parentheses(int p, int q)
       match++;
     }
     else if(tokens[i].type == RIGHT){
-      match--;
+      match = match - 1;
     }
     if(match < 0){
       return false;
