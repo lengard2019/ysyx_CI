@@ -454,7 +454,7 @@ uint32_t eval(int p, int q) {
     /* The expression is surrounded by a matched pair of parentheses.
      * If that is the case, just throw away the parentheses.
      */
-    printf("%d %d\n", p, q);
+    // printf("%d %d\n", p, q);
     return eval(p + 1, q - 1);
   }
   else {
@@ -525,9 +525,9 @@ uint32_t eval(int p, int q) {
     }
     // printf("500 %d\n",q);
     int op_type =  tokens[op].type;
-    printf("501 %d %d\n",p, op - 1);
+    // printf("501 %d %d\n",p, op - 1);
     uint32_t val1 = eval(p, op - 1);
-    printf("503 %d %d\n",op + 1, q);
+    // printf("503 %d %d\n",op + 1, q);
     uint32_t val2 = eval(op + 1, q);
 
     switch (op_type) {
