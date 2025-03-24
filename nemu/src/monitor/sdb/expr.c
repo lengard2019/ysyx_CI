@@ -384,7 +384,7 @@ static void token_special(){
   }
 }
 
-static bool check_parentheses(int p, int q)//判断总式或子式是否符合要求
+static bool check_parentheses(int p, int q)
 {
   if(tokens[p].type != LEFT  || tokens[q].type != RIGHT)
     return false;
@@ -552,13 +552,13 @@ word_t expr(char *e, bool *success) {
     printf("%d %s\n",tokens[i].type, tokens[i].str);
   }
 
-  if(tokens[0].type != LEFT  || tokens[nr_token-1].type != RIGHT){
+  if(tokens[0].type != LEFT  || tokens[nr_token - 1].type != RIGHT){
     printf("please add a pair of parentheses\n");
     return -1;
   }
 
   // /* TODO: Insert codes to evaluate the expression. */
-  result = eval(1, nr_token - 2);
+  result = eval(0, nr_token - 1);
   *success = true;
   for (int i = 0; i < nr_token; i++){
     tokens[i].type = 0;
@@ -595,7 +595,7 @@ static char* test_cases[] = {
   "(2 - 1)", //17
   "(4 + 3 * (2 - 1))",//18
   "4 + 3 * (2 - 1)",//19
-  "((4 + 3) * (2 - 1))",//20
+  "((4 + 3) * (2 + 1))",//20
   "(4 + 3)) * ((2 - 1)",//21
   "(4 + 3) * (2 - 1)",//22
   "((3 + 5) * (2 - 1) / 2)",//23 wrong 段错误
