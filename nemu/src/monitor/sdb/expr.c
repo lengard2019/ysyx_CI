@@ -333,20 +333,17 @@ static void token_special(){
       sscanf(tokens[i+1].str,"%x", &addr);
       // printf("%d\n",addr);
       word_t value = paddr_read(addr,4);
-      printf("336 %d\n",value);
       snprintf(tokens[i+1].str, 11, "0x%08X", value);
-      printf("338 %s\n",tokens[i+1].str);
       // printf("mark\n");
       // printf("%s\n",tokens[i+1].str);
-      for(int j = 0 ; j < nr_token ; j ++){
-        if(tokens[j].type == TK_NOTYPE){
-          for(int k = j +1 ; k < nr_token ; k ++){
-            tokens[k - 1] = tokens[k];
-          }
-          nr_token -- ;
-        }
-      }    	    
-    }
+      // for(int j = 0 ; j < nr_token ; j ++){
+      //   if(tokens[j].type == TK_NOTYPE){
+      for(int k = i + 1 ; k < nr_token ; k ++){
+        tokens[k - 1] = tokens[k];
+      }
+      nr_token -- ;
+      tokens[i].type = HEX;
+    }    	    
   }
 
   /*
