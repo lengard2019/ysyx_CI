@@ -139,6 +139,8 @@ static int cmd_p(char *args){
     char* arr = strtok(args," ");
     char* mode = strtok(NULL," ");
 
+    printf("%s\n",mode);
+
     char* h = "h";
 
     bool is_division0 = false;
