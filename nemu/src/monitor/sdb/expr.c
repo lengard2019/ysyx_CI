@@ -315,7 +315,8 @@ static void token_special(){
       vaddr_t pc = cpu_state();
       snprintf(tokens[i].str, 11, "0x%08X", pc);
       tokens[i].type = NUM;
-      printf("318 %s\n",tokens[i].str);
+      printf("%s\n",tokens[i].str);
+      // printf("318 %s\n",tokens[i].str);
 	    // bool flag = true;
 	    // int tmp = isa_reg_str2val(tokens[i].str, &flag);
 	    // if(flag){
@@ -362,33 +363,34 @@ static void token_special(){
   /*
    * NUM
   */
-  for(int i = 0 ; i < nr_token ; i ++)
-  {
-    if(tokens[i].type == NUM)
-    {
-      if(tokens[i].str[0] == '0' && (tokens[i].str[1] == 'x'|| tokens[i].str[1] == 'X'))// Hex num
-      {
-        int value = strtol(tokens[i].str, NULL, 16);
-        printf("372 %x\n",value);
-        int2char(value, tokens[i].str);
-        printf("374 %s\n",tokens[i].str);
-      }
-      else
-      {
-        for(int j = 0; j < strlen(tokens[i].str); j++)
-        {
-          // printf("%s\n",tokens[i].str);
-          if(tokens[i].str[j] < '0' || tokens[i].str[j] > '9')
-          {
-            if(tokens[i].str[j] != '-'){
-              printf("the number of position %d is wrong\n", i);
-              assert(0);
-            }           
-          }
-        }
-      }
-    }
-  }
+  // for(int i = 0 ; i < nr_token ; i ++)
+  // {
+  //   if(tokens[i].type == NUM)
+  //   {
+  //     // if(tokens[i].str[0] == '0' && (tokens[i].str[1] == 'x'|| tokens[i].str[1] == 'X'))// Hex num
+  //     // {
+  //     //   int value = strtol(tokens[i].str, NULL, 16);
+
+  //     //   printf("372 %x\n",value);//
+  //     //   int2char(value, tokens[i].str);
+  //     //   printf("374 %s\n",tokens[i].str);
+  //     // }
+  //     // else
+  //     {
+  //       for(int j = 0; j < strlen(tokens[i].str); j++)
+  //       {
+  //         // printf("%s\n",tokens[i].str);
+  //         if(tokens[i].str[j] < '0' || tokens[i].str[j] > '9')
+  //         {
+  //           if(tokens[i].str[j] != '-'){
+  //             printf("the number of position %d is wrong\n", i);
+  //             assert(0);
+  //           }
+  //         }
+  //       }
+  //     }
+  //   }
+  // }
 
   /*
    * 负数
