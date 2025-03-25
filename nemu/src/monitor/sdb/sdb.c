@@ -123,7 +123,7 @@ static int cmd_si(char *args){
     step = 1;
   else
     sscanf(args,"%d",&step);// 读入 Step
-  printf("%08x\n",cpu_state());
+  // printf("%08x\n",cpu_state());
   cpu_exec(step);
   return 0;
 }
