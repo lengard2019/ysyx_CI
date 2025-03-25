@@ -136,15 +136,25 @@ static int cmd_p(char *args){
         return 0;
     }
 
+    char* arr = strtok(args," ");
+    char* mode = strtok(NULL," ");
+
+    char* h = "h";
+
     bool is_division0 = false;
     bool a = false;
-    word_t result = expr(args,&a);
+    word_t result = expr(arr,&a);
     is_division0 = division();
     if (is_division0 == true){
       printf("-1\n");
     }
     else{
-      printf("%x\n", result);
+      if(strcmp(mode,h) == 1){
+        printf("%x\n", result);
+      }
+      else{
+        printf("%d\n", result);
+      }
     }
 
     return 0;
