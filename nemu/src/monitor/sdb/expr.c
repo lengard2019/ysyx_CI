@@ -315,7 +315,7 @@ static void token_special(){
       vaddr_t pc = cpu_state();
       snprintf(tokens[i].str, 11, "0x%08X", pc);
       tokens[i].type = NUM;
-      printf("%s\n",tokens[i].str);
+      printf("318 %s\n",tokens[i].str);
       // printf("318 %s\n",tokens[i].str);
 	    // bool flag = true;
 	    // int tmp = isa_reg_str2val(tokens[i].str, &flag);
