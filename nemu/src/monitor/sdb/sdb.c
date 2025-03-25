@@ -144,7 +144,7 @@ static int cmd_p(char *args){
       printf("-1\n");
     }
     else{
-      printf("%x\n", result);
+      printf("147 %x\n", result);
     }
 
     return 0;
