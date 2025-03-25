@@ -313,7 +313,7 @@ static void token_special(){
 	  {
 
       vaddr_t pc = cpu_state();
-      int2char(pc, tokens[i].str);
+      snprintf(tokens[i].str, 11, "0x%08X", pc);
       tokens[i].type = NUM;
       printf("%s\n",tokens[i].str);
 	    // bool flag = true;
