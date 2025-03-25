@@ -39,6 +39,7 @@ enum {
   OR        = 12,
   AND       = 13,
   PC        = 14,
+  HEX       = 15,
 
   /* TODO: Add more token types */
 
@@ -314,20 +315,7 @@ static void token_special(){
 
       vaddr_t pc = cpu_state();
       snprintf(tokens[i].str, 11, "0x%08X", pc);
-      tokens[i].type = NUM;
-      printf("318 %s\n",tokens[i].str);
-      // printf("318 %s\n",tokens[i].str);
-	    // bool flag = true;
-	    // int tmp = isa_reg_str2val(tokens[i].str, &flag);
-	    // if(flag){
-      //   // printf("%d\n",tmp);
-		  //   int2char(tmp, tokens[i].str);
-      //   tokens[i].type = NUM;
-      // }
-      // else{
-		  //   printf("Transfrom error. \n");
-		  //   assert(0);
-	    // }
+      tokens[i].type = HEX;
     }
   }
   /*
@@ -346,7 +334,7 @@ static void token_special(){
       // printf("%d\n",addr);
       word_t value = paddr_read(addr,4);
       // printf("%d\n",value);
-      int2char((int)value, tokens[i+1].str);
+      snprintf(tokens[i].str, 11, "0x%08X", value);
       // printf("mark\n");
       // printf("%s\n",tokens[i+1].str);
       for(int j = 0 ; j < nr_token ; j ++){
@@ -489,7 +477,13 @@ uint32_t eval(int p, int q) {
      */
     // printf("%s\n",tokens[p].str);
     // printf("%d\n",atoi(tokens[p].str));
-    return atoi(tokens[p].str);
+    // if(tokens[p].type == NUM){
+      return atoi(tokens[p].str);
+    // }
+    // else if(tokens[p].type == HEX){
+    //   int tmp = strtol(tokens[p].str, NULL, 16);
+    //   return (uint32_t)tmp;
+    // }
   }
   else if (check_parentheses(p, q) == true) {
     /* The expression is surrounded by a matched pair of parentheses.
