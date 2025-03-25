@@ -475,8 +475,6 @@ uint32_t eval(int p, int q) {
      * For now this token should be a number.
      * Return the value of the number.
      */
-    // printf("%s\n",tokens[p].str);
-    // printf("%d\n",atoi(tokens[p].str));
     if(tokens[p].type == HEX){
       int tmp = strtol(tokens[p].str, NULL, 16);
       return (uint32_t)tmp;
@@ -505,13 +503,6 @@ uint32_t eval(int p, int q) {
           }
           // i++; 
         }
-      // if(tokens[i].type == RIGHT)//跳过括号后不应该先出现右括号
-      //   {
-      //     printf("%d\n",i);
-      //     printf("wrong parentheses used\n");
-      //     assert(0);
-      //     return -1;
-      //   }
       if(!flag && tokens[i].type == LEQ)
         {
           flag = true;
