@@ -20,6 +20,7 @@
  */
 #include <regex.h>
 #include <memory/paddr.h>
+#include <cpu/cpu.h>
 
 enum {
   TK_NOTYPE = 256, 
@@ -300,6 +301,29 @@ static void token_special(){
 		    printf("Transfrom error. \n");
 		    assert(0);
 	    }
+    }
+  }
+  /*
+  * TODO
+  * PC
+  * */
+  for(int i = 0; i < nr_token; i ++)
+  {
+	  if(tokens[i].type == PC)
+	  {
+
+      // vaddr_t pc = cpu_state();
+	    // bool flag = true;
+	    // int tmp = isa_reg_str2val(tokens[i].str, &flag);
+	    // if(flag){
+      //   // printf("%d\n",tmp);
+		  //   int2char(tmp, tokens[i].str);
+      //   tokens[i].type = NUM;
+      // }
+      // else{
+		  //   printf("Transfrom error. \n");
+		  //   assert(0);
+	    // }
     }
   }
   /*

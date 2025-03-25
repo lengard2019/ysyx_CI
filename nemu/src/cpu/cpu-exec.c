@@ -112,6 +112,11 @@ void assert_fail_msg() {
   statistic();
 }
 
+vaddr_t cpu_state(){
+
+  return cpu.pc;
+}
+
 /* Simulate how the CPU works. */
 void cpu_exec(uint64_t n) {
   g_print_step = (n < MAX_INST_TO_PRINT);//MAX_INST_TO_PRINT = 10;
