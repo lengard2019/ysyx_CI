@@ -312,7 +312,9 @@ static void token_special(){
 	  if(tokens[i].type == PC)
 	  {
 
-      // vaddr_t pc = cpu_state();
+      vaddr_t pc = cpu_state();
+      int2char(pc, tokens[i].str);
+      tokens[i].type = NUM;
 	    // bool flag = true;
 	    // int tmp = isa_reg_str2val(tokens[i].str, &flag);
 	    // if(flag){
