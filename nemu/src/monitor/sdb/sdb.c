@@ -138,11 +138,11 @@ static int cmd_p(char *args){
 
     char* arr = strtok(args," ");
     char* mode = strtok(NULL," ");
-
-    printf("%s\n",mode);
-
     char* h = "h";
 
+    printf("%s %s\n",mode,h);
+    
+    printf("%d\n",strcmp(mode,h));
     bool is_division0 = false;
     bool a = false;
     word_t result = expr(arr,&a);
