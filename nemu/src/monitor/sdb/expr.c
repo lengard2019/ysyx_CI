@@ -477,13 +477,13 @@ uint32_t eval(int p, int q) {
      */
     // printf("%s\n",tokens[p].str);
     // printf("%d\n",atoi(tokens[p].str));
-    // if(tokens[p].type == NUM){
+    if(tokens[p].type == HEX){
+      int tmp = strtol(tokens[p].str, NULL, 16);
+      return (uint32_t)tmp;
+    }
+    else {
       return atoi(tokens[p].str);
-    // }
-    // else if(tokens[p].type == HEX){
-    //   int tmp = strtol(tokens[p].str, NULL, 16);
-    //   return (uint32_t)tmp;
-    // }
+    }
   }
   else if (check_parentheses(p, q) == true) {
     /* The expression is surrounded by a matched pair of parentheses.
