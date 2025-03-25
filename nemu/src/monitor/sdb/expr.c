@@ -37,6 +37,7 @@ enum {
   REG       = 11,
   OR        = 12,
   AND       = 13,
+  PC        = 14,
 
   /* TODO: Add more token types */
 
@@ -66,6 +67,7 @@ static struct rule {
   {"\\$\\$0|\\$ra|\\$sp|\\$gp|\\$tp|\\$t[0-6]|\\$s[0-9]|\\$s1[0-1]|\\$a[0-7]", REG},
   {"\\|\\|", OR},
   {"\\&\\&", AND},
+  {"\\p\\c",PC},
 };
 
 #define NR_REGEX ARRLEN(rules)
@@ -255,6 +257,12 @@ static bool make_token(char *e) {
           case(AND):
               tokens[nr_token].type = AND;
               strcpy(tokens[nr_token].str, "&&");
+              nr_token ++;
+              break;
+          
+          case(PC):
+              tokens[nr_token].type = PC;
+              strcpy(tokens[nr_token].str, "PC");
               nr_token ++;
               break;
 
