@@ -315,6 +315,7 @@ static void token_special(){
       vaddr_t pc = cpu_state();
       int2char(pc, tokens[i].str);
       tokens[i].type = NUM;
+      printf("%s\n",tokens[i].str);
 	    // bool flag = true;
 	    // int tmp = isa_reg_str2val(tokens[i].str, &flag);
 	    // if(flag){
