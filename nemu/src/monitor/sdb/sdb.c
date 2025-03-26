@@ -148,11 +148,11 @@ static int cmd_p(char *args){
       printf("-1\n");
     }
     else{
-      if(strcmp(mode,h) == 0){
-        printf("%x\n", result);
-      }
-      else{
+      if(mode == NULL){
         printf("%d\n", result);
+      }
+      else if(strcmp(mode,h) == 0){
+        printf("%x\n", result);
       }
     }
 
