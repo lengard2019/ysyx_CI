@@ -140,9 +140,6 @@ static int cmd_p(char *args){
     char* mode = strtok(NULL," ");
     char* h = "h";
 
-    printf("%s %s\n",mode,h);
-    
-    printf("%d\n",strcmp(mode,h));
     bool is_division0 = false;
     bool a = false;
     word_t result = expr(arr,&a);
@@ -151,7 +148,7 @@ static int cmd_p(char *args){
       printf("-1\n");
     }
     else{
-      if(strcmp(mode,h) == 1){
+      if(strcmp(mode,h) == 0){
         printf("%x\n", result);
       }
       else{
