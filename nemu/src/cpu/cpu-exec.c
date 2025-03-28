@@ -56,9 +56,7 @@ static void trace_and_difftest(Decode *_this, vaddr_t dnpc) {
 static void exec_once(Decode *s, vaddr_t pc) {
   s->pc = pc; //pc=uint_64
   s->snpc = pc; //static
-  printf("mark\n");
   isa_exec_once(s);
-  printf("mark\n");
   cpu.pc = s->dnpc;//dynamic
 #ifdef CONFIG_ITRACE
   char *p = s->logbuf;
