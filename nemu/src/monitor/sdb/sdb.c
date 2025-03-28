@@ -155,7 +155,6 @@ static int cmd_p(char *args){
         printf("%x\n", result);
       }
     }
-
     return 0;
 }
 
