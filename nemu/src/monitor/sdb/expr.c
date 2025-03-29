@@ -696,21 +696,35 @@ void gen_rand_expr() {
   if(token_count >= MAX_TOKENS - 1){
     return;
   }
-  switch (choose(3)) {
-    case 0: 
-      gen_num(); 
-      break;
-    case 1: 
-      gen('(');
-      gen_rand_expr(); 
-      gen(')'); 
-      break;
-    default: 
-      gen_rand_expr(); 
-      gen_rand_op();
-      gen_rand_expr(); 
-      break;
+  int a = choose(5);
+  if(a == 0 || a == 1){
+    gen_num(); 
   }
+  else if(a == 2){
+    gen('(');
+    gen_rand_expr(); 
+    gen(')');
+  }
+  else{
+    gen_rand_expr(); 
+    gen_rand_op();
+    gen_rand_expr(); 
+  }
+  // switch (choose(3)) {
+  //   case 0: 
+  //     gen_num(); 
+  //     break;
+  //   case 1: 
+  //     gen('(');
+  //     gen_rand_expr(); 
+  //     gen(')'); 
+  //     break;
+  //   default: 
+  //     gen_rand_expr(); 
+  //     gen_rand_op();
+  //     gen_rand_expr(); 
+  //     break;
+  // }
 }
 
 char* get_expr()
