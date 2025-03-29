@@ -460,13 +460,17 @@ uint32_t eval(int p, int q) {
         {
           int a = i;
 
-          for (int j = a; j < q; j++){
-            if(tokens[j].type == RIGHT && check_parentheses(a,j) == true){
-              i = j;
-              printf("466 %d\n",j);
-              break;
-            }
+          while(check_parentheses(a,i) != true){
+            i++;
           }
+
+          // for (int j = a; j < q; j++){
+          //   if(check_parentheses(a,j) == true){
+          //     i = j;
+          //     printf("466 %d\n",j);
+          //     break;
+          //   }
+          // }
           // i++; 
         }
       if(!flag && tokens[i].type == LEQ)
