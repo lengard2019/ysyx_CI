@@ -24,6 +24,8 @@ bool division();
 
 char* get_expr();
 
+void clean();
+
 typedef struct token {
   int type;
   char str[32];

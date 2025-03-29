@@ -618,7 +618,6 @@ static char buf[100] __attribute__((used)) = {};
 
 
 
-
 int choose(int n)
 {
 	return rand() % n;
@@ -626,13 +625,13 @@ int choose(int n)
 
 static void gen(char c)
 {
-	buf[index_buf++] = c;
+	buf[index_buf] = c;
+  index_buf++;
 }
 
 static void gen_num()
 {
 	int num = rand() % 100;
-	//if(num == 0) num += 1;
 	int len = 0, tmp = num;
 	while(tmp)
 	{
@@ -652,7 +651,8 @@ static void gen_num()
 	while(num)
 	{
 		char c = num / x + '0';
-		buf[index_buf++] = c;
+		buf[index_buf] = c;
+    index_buf++;
 		num %= x;
 		x /= 10;
 	}
@@ -666,7 +666,8 @@ static void gen_rand_op()
 }
 
 void gen_rand_expr() {
-  
+  buf[0] = '(';
+  index_buf ++;
   switch (choose(3)) {
     case 0: 
       gen_num(); 
@@ -690,6 +691,13 @@ char* get_expr()
 {
   gen_rand_expr();
   // printf("%s\n",buf);
+  buf[index_buf] = ')';
   return buf;
 }
 
+void clean(){
+  for(int i = 0; i < index_buf; i++){
+    buf[i] = '\0'; 
+  }
+  index_buf = 0;
+}
