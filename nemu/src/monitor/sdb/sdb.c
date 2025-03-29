@@ -104,6 +104,7 @@ static int cmd_test(char *args){
   bool is_division0 = false;
   word_t result = expr(e,&a);
   is_division0 = division();
+  clean();
     if (is_division0 == true){
       printf("-1\n");
     }
