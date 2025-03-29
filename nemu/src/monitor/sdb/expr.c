@@ -698,17 +698,20 @@ void gen_rand_expr() {
   }
   int a = choose(5);
   if(a == 0 || a == 1){
-    gen_num(); 
+    gen_num();
+    return; 
   }
   else if(a == 2){
     gen('(');
     gen_rand_expr(); 
     gen(')');
+    return;
   }
   else{
     gen_rand_expr(); 
     gen_rand_op();
-    gen_rand_expr(); 
+    gen_rand_expr();
+    return; 
   }
   // switch (choose(3)) {
   //   case 0: 

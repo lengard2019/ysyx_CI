@@ -89,9 +89,6 @@ static struct {
   { "d", "Delete watchponits", cmd_d },
   { "test", "test", cmd_test }
 
-
-  /* TODO: Add more commands */
-
 };
 
 #define NR_CMD ARRLEN(cmd_table)
