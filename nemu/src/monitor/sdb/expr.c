@@ -666,8 +666,7 @@ static void gen_rand_op()
 }
 
 void gen_rand_expr() {
-  // rand_expr[0] = '(';
-  // index++;
+  
   switch (choose(3)) {
     case 0: 
       gen_num(); 
@@ -693,3 +692,4 @@ char* get_expr()
   // printf("%s\n",buf);
   return buf;
 }
+
