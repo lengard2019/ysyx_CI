@@ -509,7 +509,7 @@ uint32_t eval(int p, int q) {
           op = (op > i) ? op : i;
         }
 
-      if(!flag && ((tokens[i].type == PLUS) || (tokens[i].type == MINUS))){
+      if(((tokens[i].type == PLUS) || (tokens[i].type == MINUS))){
         flag = true;
         // op = i;
         op = (op > i) ? op : i;
