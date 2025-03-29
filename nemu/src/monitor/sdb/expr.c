@@ -617,8 +617,6 @@ static int index_buf = 0;
 static char buf[100] __attribute__((used)) = {};
 // static token_count = 0;
 
-
-
 int choose(int n)
 {
 	return rand() % n;
@@ -669,7 +667,7 @@ static void gen_rand_op()
 void gen_rand_expr() {
   // buf[0] = '(';
   // index_buf ++;
-  switch (choose(3)) {
+  switch (choose(10)) {
     case 0: 
       gen_num(); 
       break;
@@ -680,11 +678,10 @@ void gen_rand_expr() {
       break;
     default: 
       gen_rand_expr(); 
-      gen_rand_op();  
+      gen_rand_op();
       gen_rand_expr(); 
       break;
   }
-
 }
 
 char* get_expr()
