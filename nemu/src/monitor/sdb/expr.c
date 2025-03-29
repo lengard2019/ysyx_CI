@@ -558,10 +558,10 @@ word_t expr(char *e, bool *success) {
 
   token_special();//特殊情况
   word_t result = 0;
-  // printf("%d\n", nr_token);
-  // for (int i = 0; i < nr_token; i++){
-  //   printf("%d %s\n",tokens[i].type, tokens[i].str);
-  // }
+  printf("%d\n", nr_token);
+  for (int i = 0; i < nr_token; i++){
+    printf("%d %s\n",tokens[i].type, tokens[i].str);
+  }
 
   if(check_parentheses(0, nr_token - 1) == false){
     printf("wrong parentheses used\n");
@@ -672,8 +672,8 @@ static void gen_rand_op()
   if(token_count >= MAX_TOKENS - 1){
     return;
   }
-	char op[4] = {'+', '-', '*', '/'};
-	int pos = rand() % 4;
+	char op[3] = {'+', '-', '*'};
+	int pos = rand() % 3;
 	buf[index_buf++] = op[pos];
   token_count ++;
 }
