@@ -626,6 +626,9 @@ int choose(int n)
 
 static void gen(char c)
 {
+  if(token_count >= MAX_TOKENS - 1){
+    return;
+  }
 	buf[index_buf] = c;
   index_buf++;
   token_count ++;
@@ -633,6 +636,9 @@ static void gen(char c)
 
 static void gen_num()
 {
+  if(token_count >= MAX_TOKENS - 1){
+    return;
+  }
 	int num = rand() % 100;
 	int len = 0, tmp = num;
 	while(tmp)
@@ -663,6 +669,9 @@ static void gen_num()
 
 static void gen_rand_op()
 {
+  if(token_count >= MAX_TOKENS - 1){
+    return;
+  }
 	char op[4] = {'+', '-', '*', '/'};
 	int pos = rand() % 4;
 	buf[index_buf++] = op[pos];
@@ -696,7 +705,8 @@ char* get_expr()
   index_buf ++;
   token_count ++;
   gen_rand_expr();
-  buf[index_buf] = ')';
+  buf[index_buf ++] = ')';
+  buf[index_buf ++] = '\0';
   return buf;
 }
 
@@ -705,4 +715,5 @@ void clean(){
     buf[i] = '\0'; 
   }
   index_buf = 0;
+  token_count = 0;
 }
