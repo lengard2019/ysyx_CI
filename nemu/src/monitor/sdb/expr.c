@@ -463,6 +463,7 @@ uint32_t eval(int p, int q) {
           for (int j = a; j < q; j++){
             if(tokens[j].type == RIGHT && check_parentheses(a,j) == true){
               i = j;
+              printf("466 %d\n",j);
               break;
             }
           }
