@@ -594,6 +594,8 @@ bool division(){
   return is_division0;
 }
 
+// (2*(4-6+9+8*(7+4)*(4-2)))
+
 //for test
 // static char* test_cases[] = {
 //   "(3 + 5 * 2)",                    //0
