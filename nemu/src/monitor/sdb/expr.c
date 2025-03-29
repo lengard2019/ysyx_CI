@@ -461,7 +461,7 @@ uint32_t eval(int p, int q) {
           int a = i;
 
           for (int j = a; j < q; j++){
-            if(tokens[i].type == RIGHT && check_parentheses(a,j) == true){
+            if(tokens[j].type == RIGHT && check_parentheses(a,j) == true){
               i = j;
               break;
             }
