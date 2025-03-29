@@ -464,10 +464,10 @@ uint32_t eval(int p, int q) {
             
           // }
 
-          // while(tokens[i].type != RIGHT){
-          //   i ++;//若没有找到，将返回到Bad expression
-          // }
-          // // i++; 
+          while(tokens[i].type != RIGHT){
+            i ++;//若没有找到，将返回到Bad expression
+          }
+          // i++; 
         }
       if(!flag && tokens[i].type == LEQ)
         {
