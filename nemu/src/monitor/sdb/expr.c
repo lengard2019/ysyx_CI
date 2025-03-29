@@ -615,6 +615,7 @@ bool division(){
 
 static int index_buf = 0;
 static char buf[100] __attribute__((used)) = {};
+// static token_count = 0;
 
 
 
@@ -667,7 +668,7 @@ static void gen_rand_op()
 
 void gen_rand_expr() {
   buf[0] = '(';
-  // index_buf ++;
+  // token_count ++;
   switch (choose(3)) {
     case 0: 
       gen_num(); 
@@ -683,6 +684,7 @@ void gen_rand_expr() {
       gen_rand_expr(); 
       break;
   }
+
 }
 
 
