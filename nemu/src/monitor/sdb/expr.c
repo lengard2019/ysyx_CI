@@ -318,10 +318,9 @@ static void token_special(){
       tokens[i].type = HEX;
     }
   }
-  /*
-  * TODO
-  * 内存
-  * */
+  
+  //内存
+ 
   for(int i = 0 ; i < nr_token ; i ++)
   {
     if((tokens[i].type == MULTI && i > 0 && tokens[i-1].type != NUM && tokens[i-1].type != RIGHT && tokens[i-1].type != REG && tokens[i+1].type == NUM)
@@ -392,29 +391,6 @@ static void token_special(){
   }
 }
 
-// static bool check_parentheses(int p, int q)
-// {
-//   if(tokens[p].type != LEFT  || tokens[q].type != RIGHT)
-//     return false;
-//   int l = p , r = q;
-//   while(l < r)
-//   {
-//     if(tokens[l].type == LEFT){
-//       if(tokens[r].type == RIGHT)
-//         {
-//           l ++ , r --;
-//           continue;
-//         }
-
-//       else
-//         r --;
-//     }
-//     else if(tokens[l].type == RIGHT)
-//       return false;
-//     else l ++;
-//   }
-//   return true;
-// }
 static bool check_parentheses(int p, int q)// 0,12
 {
   if(tokens[p].type != LEFT  || tokens[q].type != RIGHT){
@@ -602,45 +578,118 @@ word_t expr(char *e, bool *success) {
 }
 
 bool division(){
-
   return is_division0;
 }
 
 //for test
-static char* test_cases[] = {
-  "(3 + 5 * 2)",                    //0
-  "((3 + 5) * 2)",                  //1
-  "(27 / (2 + 7))",                 //2
-  "(10 / (2 + 3))",                 //3
-  "(100 + 50 / 5 + 10)",            //4
-  "(((2 + 3) * 4) - 6)",            //5
-  "(10 / 0)",                       //6
-  "(5 + 3 / (2 - 2))",              //7
-  "((3 + 5 * 2)",                   //8
-  "(3 + 5) * 2)",                   //9
-  "((3 + 5) * 2 + 8)",              //10
-  "((3 + 5)) * 2)",                 //11
-  "((3 + 5 ) / 2)",                 //12
-  "(3 + 5 * 2 +)",                  //13
-  "(3 + 5 * 2 -)",                  //14
-  "(2 * -1)",                       //15
-  "((-1 + -3) / 2)",                //16
-  "(2 - 1)",                        //17
-  "(4 + 3 * (2 - 1))",              //18
-  "4 + 3 * (2 - 1)",                //19
-  "((4 + 3) * (2 + 1))",            //20
-  "(4 + 3)) * ((2 - 1)",            //21
-  "(4 + 3) * (2 - 1)",              //22
-  "((3 + 5) * (2 - 1) / 2)",        //23
-  "(((3 + 5) * 2) - (6 / 3))",      //24
-  "((1 + 2) * (5 + 4) / (5 - 2))",  //25
-  "((1 + 2) * 3 + (4 - 6) / 2)",    //26
-  "((1 + 6) * (3 + 3) * 5)",        //27
-};
+// static char* test_cases[] = {
+//   "(3 + 5 * 2)",                    //0
+//   "((3 + 5) * 2)",                  //1
+//   "(27 / (2 + 7))",                 //2
+//   "(10 / (2 + 3))",                 //3
+//   "(100 + 50 / 5 + 10)",            //4
+//   "(((2 + 3) * 4) - 6)",            //5
+//   "(10 / 0)",                       //6
+//   "(5 + 3 / (2 - 2))",              //7
+//   "((3 + 5 * 2)",                   //8
+//   "(3 + 5) * 2)",                   //9
+//   "((3 + 5) * 2 + 8)",              //10
+//   "((3 + 5)) * 2)",                 //11
+//   "((3 + 5 ) / 2)",                 //12
+//   "(3 + 5 * 2 +)",                  //13
+//   "(3 + 5 * 2 -)",                  //14
+//   "(2 * -1)",                       //15
+//   "((-1 + -3) / 2)",                //16
+//   "(2 - 1)",                        //17
+//   "(4 + 3 * (2 - 1))",              //18
+//   "4 + 3 * (2 - 1)",                //19
+//   "((4 + 3) * (2 + 1))",            //20
+//   "(4 + 3)) * ((2 - 1)",            //21
+//   "(4 + 3) * (2 - 1)",              //22
+//   "((3 + 5) * (2 - 1) / 2)",        //23
+//   "(((3 + 5) * 2) - (6 / 3))",      //24
+//   "((1 + 2) * (5 + 4) / (5 - 2))",  //25
+//   "((1 + 2) * 3 + (4 - 6) / 2)",    //26
+//   "((1 + 6) * (3 + 3) * 5)",        //27
+// };
+
+static int index_buf = 0;
+static char buf[100] __attribute__((used)) = {};
 
 
-char* get_expr(int i)
+
+
+int choose(int n)
 {
-  char *e = test_cases[i];
-  return e;
+	return rand() % n;
+}
+
+static void gen(char c)
+{
+	buf[index_buf++] = c;
+}
+
+static void gen_num()
+{
+	int num = rand() % 100;
+	//if(num == 0) num += 1;
+	int len = 0, tmp = num;
+	while(tmp)
+	{
+		tmp /= 10;
+		len++;
+	}
+
+	int x;
+
+	if(len <= 1){
+    x = 1;
+  } 
+	else{
+    x = (len - 1) * 10;
+  }
+   
+	while(num)
+	{
+		char c = num / x + '0';
+		buf[index_buf++] = c;
+		num %= x;
+		x /= 10;
+	}
+}
+
+static void gen_rand_op()
+{
+	char op[4] = {'+', '-', '*', '/'};
+	int pos = rand() % 4;
+	buf[index_buf++] = op[pos];
+}
+
+void gen_rand_expr() {
+  // rand_expr[0] = '(';
+  // index++;
+  switch (choose(3)) {
+    case 0: 
+      gen_num(); 
+      break;
+    case 1: 
+      gen('(');
+      gen_rand_expr(); 
+      gen(')'); 
+      break;
+    default: 
+      gen_rand_expr(); 
+      gen_rand_op();  
+      gen_rand_expr(); 
+      break;
+  }
+}
+
+
+
+char* get_expr()
+{
+  gen_rand_expr();
+  // printf("%s\n",buf);
+  return buf;
 }

@@ -76,7 +76,7 @@ static int cmd_test(char *args);
 static struct {
   const char *name;
   const char *description;
-  int (*handler) (char *);
+  int (*handler) (char *);//函数指针
 } cmd_table [] = {
   { "help", "Display information about all supported commands", cmd_help },
   { "c", "Continue the execution of the program", cmd_c },
@@ -98,10 +98,7 @@ static struct {
 
 
 static int cmd_test(char *args){
-  char* n = strtok(args," ");
-  int index = 0;
-  sscanf(n, "%d", &index);
-  char* e = get_expr(index);
+  char* e = get_expr();
   printf("%s\n",e);
   bool a = false;
   bool is_division0 = false;
