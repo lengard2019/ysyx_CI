@@ -8,7 +8,7 @@ LDFLAGS += -shared -fPIC
 endif
 
 WORK_DIR  = $(shell pwd)
-BUILD_DIR = $(WORK_DIR)/build_gbd
+BUILD_DIR = $(WORK_DIR)/build_gdb
 
 INC_PATH := $(WORK_DIR)/include $(INC_PATH)
 OBJ_DIR  = $(BUILD_DIR)/obj-$(NAME)$(SO)
