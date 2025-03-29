@@ -22,6 +22,8 @@
 #include <memory/paddr.h>
 #include <cpu/cpu.h>
 
+#define MAX_TOKENS 32 
+
 enum {
   TK_NOTYPE = 256, 
   PLUS      = 0,
@@ -615,7 +617,7 @@ bool division(){
 
 static int index_buf = 0;
 static char buf[100] __attribute__((used)) = {};
-// static token_count = 0;
+static int token_count = 0;
 
 int choose(int n)
 {
@@ -626,6 +628,7 @@ static void gen(char c)
 {
 	buf[index_buf] = c;
   index_buf++;
+  token_count ++;
 }
 
 static void gen_num()
@@ -655,6 +658,7 @@ static void gen_num()
 		num %= x;
 		x /= 10;
 	}
+  token_count ++;
 }
 
 static void gen_rand_op()
@@ -662,11 +666,15 @@ static void gen_rand_op()
 	char op[4] = {'+', '-', '*', '/'};
 	int pos = rand() % 4;
 	buf[index_buf++] = op[pos];
+  token_count ++;
 }
 
 void gen_rand_expr() {
   // buf[0] = '(';
   // index_buf ++;
+  if(token_count == MAX_TOKENS){
+    return;
+  }
   switch (choose(3)) {
     case 0: 
       gen_num(); 
