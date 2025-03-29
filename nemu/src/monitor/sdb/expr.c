@@ -458,14 +458,13 @@ uint32_t eval(int p, int q) {
     for(int i = p; i < q; i++){
       if(tokens[i].type == LEFT)//括号内最后算
         {
-          
-          // int a = i;
-          // while(count != 0){
-            
-          // }
+          int a = i;
 
-          while(tokens[i].type != RIGHT){
-            i ++;//若没有找到，将返回到Bad expression
+          for (int j = a; j < q; j++){
+            if(tokens[i].type == RIGHT && check_parentheses(a,j) == true){
+              i = j;
+              break;
+            }
           }
           // i++; 
         }
