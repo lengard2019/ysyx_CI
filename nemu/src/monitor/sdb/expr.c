@@ -668,7 +668,7 @@ static void gen_rand_op()
 
 void gen_rand_expr() {
   buf[0] = '(';
-  // token_count ++;
+  index_buf ++;
   switch (choose(3)) {
     case 0: 
       gen_num(); 
