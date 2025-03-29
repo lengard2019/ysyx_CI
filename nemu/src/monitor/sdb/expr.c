@@ -670,8 +670,6 @@ static void gen_rand_op()
 }
 
 void gen_rand_expr() {
-  // buf[0] = '(';
-  // index_buf ++;
   if(token_count == MAX_TOKENS){
     return;
   }
@@ -693,10 +691,12 @@ void gen_rand_expr() {
 }
 
 char* get_expr()
-{
+{ 
+  buf[index_buf] = '(';
+  index_buf ++;
+  token_count ++;
   gen_rand_expr();
-  // printf("%s\n",buf);
-  // buf[index_buf] = ')';
+  buf[index_buf] = ')';
   return buf;
 }
 
