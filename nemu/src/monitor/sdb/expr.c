@@ -452,15 +452,22 @@ uint32_t eval(int p, int q) {
   else {
     int op = -1;//the position of 主运算符 in the token expression;
     bool flag = false;//判断是否是加减号
+    // int index;//特殊情况
 
     //搜索主运算符的位置
     for(int i = p; i < q; i++){
       if(tokens[i].type == LEFT)//括号内最后算
         {
-          while(tokens[i].type != RIGHT){
-            i ++;//若没有找到，将返回到Bad expression
-          }
-          // i++; 
+          
+          // int a = i;
+          // while(count != 0){
+            
+          // }
+
+          // while(tokens[i].type != RIGHT){
+          //   i ++;//若没有找到，将返回到Bad expression
+          // }
+          // // i++; 
         }
       if(!flag && tokens[i].type == LEQ)
         {
