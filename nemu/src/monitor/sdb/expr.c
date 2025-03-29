@@ -670,7 +670,7 @@ static void gen_rand_op()
 }
 
 void gen_rand_expr() {
-  if(token_count == MAX_TOKENS){
+  if(token_count >= MAX_TOKENS - 1){
     return;
   }
   switch (choose(3)) {
