@@ -17,16 +17,11 @@
 
 word_t isa_raise_intr(word_t NO, vaddr_t epc) {
 
-  // if(NO == 0){
-  //   epc += 4;
-  // }
 
   log_write("    ecall: error_no: %08x, pc = %08x\n", NO, epc);
 
   cpu.csr.mcause = NO; // 0x0000000b
   cpu.csr.mepc = epc;  // pc
-
-  // printf("22 %08x %08x\n", epc, cpu.csr.mtvec);
  
   return cpu.csr.mtvec;
   // return 0;
