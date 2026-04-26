@@ -4,7 +4,8 @@
 
 _start:
     mv s0, zero
-
+    mv gp, zero
+    mv tp, zero
     lui sp, %hi(_stack_pointer)
     addi sp, sp, %lo(_stack_pointer)
 

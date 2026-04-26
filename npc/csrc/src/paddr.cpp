@@ -23,149 +23,138 @@ void init_mem() {
   Log("physical memory area [" FMT_PADDR ", " FMT_PADDR "]", PMEM_LEFT, PMEM_RIGHT);
 }
 
-word_t pmem_read(paddr_t addr, uint8_t len) {
-  // paddr_t addr_r = (paddr_t)addr;
-  if(addr <= 0x87FFFFFF && addr >= 0x80000000){
-    uint8_t len_r = (uint8_t)len;
-    
-    uint8_t* addr_r = guest_to_host(addr);
+extern "C" int pmem_read(int addr) {
+
+    paddr_t addrr = (paddr_t)addr;
+    uint8_t* addr_r = pmem + addrr;
     uint32_t temp = *(uint32_t *)addr_r;
 
     return temp;
-  }
-  else{
-    printf("addr = %08x  is out of bound\n", addr);
-    assert(0);
-  }
   return 0;
 }
 
-void pmem_write(paddr_t addr, uint8_t mask, word_t data) {
-  if(addr <= 0x87FFFFFF && addr >= 0x80000000){
-    // host_write(guest_to_host(addr), mask, data);
-    uint32_t addr_r = addr - CONFIG_MBASE;
+extern "C" void pmem_write(int addr, char mask, int data) {
 
-    if(mask == 0x01){
-      // printf("%08x, %02x, %08x\n", addr_r, mask, data); 
-      pmem[addr_r] = (uint8_t)(data & 0x000000FF);
-    }
-    else if(mask == 0x02){
-      // printf("%08x, %08x\n", addr_r, data);
-      pmem[addr_r + 1] = (uint8_t)((data & 0x0000FF00) >> 8);
-    }
-    else if(mask == 0x04){
-      // printf("%08x, %08x\n", addr_r, data);
-      pmem[addr_r + 2] = (uint8_t)((data & 0x00FF0000) >> 16);
-    }
-    else if(mask == 0x08){
-      // printf("%08x, %08x\n", addr_r, data);
-      pmem[addr_r + 3] = (uint8_t)((data & 0xFF000000) >> 24);
-    }
-    else if(mask == 0x03){
-      // printf("%08x, %08x\n", addr_r, data);
-      pmem[addr_r] = (uint8_t)((data & 0x000000FF));
-      pmem[addr_r + 1] = (uint8_t)((data & 0x0000FF00) >> 8);
-    }
-    else if(mask == 0x0C){
-      // printf("%08x, %08x\n", addr_r, data);
-      pmem[addr_r + 2] = (uint8_t)((data & 0x00FF0000) >> 16);
-      pmem[addr_r + 3] = (uint8_t)((data & 0xFF000000) >> 24);
-    }
-    else if(mask == 0x0F){
-      // printf("%08x, %08x\n", addr_r, data);
-      pmem[addr_r] = (uint8_t)((data & 0x000000FF));
-      pmem[addr_r + 1] = (uint8_t)((data & 0x0000FF00) >> 8);
-      pmem[addr_r + 2] = (uint8_t)((data & 0x00FF0000) >> 16);
-      pmem[addr_r + 3] = (uint8_t)((data & 0xFF000000) >> 24);
-    }
-    else{
-      printf("wrong: mask = %02x\n", mask);
-      assert(0);
-    }
+  paddr_t addr_r = (paddr_t)addr;
+  word_t data_r = (word_t)data;
+  uint8_t mask_r = (uint8_t)mask;
+
+  if(mask_r == 0x01){
+    // printf("%08x, %02x, %08x\n", addr_r, mask, data); 
+    pmem[addr_r] = (uint8_t)(data_r & 0x000000FF);
+  }
+  else if(mask_r == 0x02){
+    // printf("%08x, %08x\n", addr_r, data);
+    pmem[addr_r + 1] = (uint8_t)((data_r & 0x0000FF00) >> 8);
+  }
+  else if(mask_r == 0x04){
+    // printf("%08x, %08x\n", addr_r, data);
+    pmem[addr_r + 2] = (uint8_t)((data_r & 0x00FF0000) >> 16);
+  }
+  else if(mask_r == 0x08){
+    // printf("%08x, %08x\n", addr_r, data);
+    pmem[addr_r + 3] = (uint8_t)((data_r & 0xFF000000) >> 24);
+  }
+  else if(mask_r == 0x03){
+    // printf("%08x, %08x\n", addr_r, data);
+    pmem[addr_r] = (uint8_t)((data_r & 0x000000FF));
+    pmem[addr_r + 1] = (uint8_t)((data_r & 0x0000FF00) >> 8);
+  }
+  else if(mask_r == 0x0C){
+    // printf("%08x, %08x\n", addr_r, data);
+    pmem[addr_r + 2] = (uint8_t)((data_r & 0x00FF0000) >> 16);
+    pmem[addr_r + 3] = (uint8_t)((data_r & 0xFF000000) >> 24);
+  }
+  else if(mask_r == 0x0F){
+    // printf("%08x, %08x\n", addr_r, data);
+    pmem[addr_r] = (uint8_t)((data_r & 0x000000FF));
+    pmem[addr_r + 1] = (uint8_t)((data_r & 0x0000FF00) >> 8);
+    pmem[addr_r + 2] = (uint8_t)((data_r & 0x00FF0000) >> 16);
+    pmem[addr_r + 3] = (uint8_t)((data_r & 0xFF000000) >> 24);
   }
   else{
-    printf("addr = %08x  is out of bound\n", addr);
+    printf("wrong: mask = %02x\n", mask);
     assert(0);
   }
 }
 
-extern "C" int pmem_read_v(int addr, char len){
-  paddr_t addr_r = (paddr_t)addr;
-  word_t ret = 0x00000000;
-  uint64_t us = get_time();
+// extern "C" int pmem_read_v(int addr, char len){
+//   paddr_t addr_r = (paddr_t)addr;
+//   word_t ret = 0x00000000;
+//   uint64_t us = get_time();
 
-  if(addr_r == CONFIG_RTC_MMIO){
-    ret = (uint32_t)us;
-    // printf("80 mark\n");
-    difftest_skip_ref();
-  }
-  else if(addr_r == CONFIG_RTC_MMIO + 4){
-    ret = us >> 32;
-    difftest_skip_ref();
-  }
-  else if(addr_r == CONFIG_TIME){
-    time(&raw_time);
-    time_info = localtime(&raw_time);
-    ret = (uint32_t)time_info->tm_sec;
-    difftest_skip_ref();
-  }
-  else if(addr_r == CONFIG_TIME + 4){
-    time(&raw_time);
-    time_info = localtime(&raw_time);
-    ret = (uint32_t)time_info->tm_min;
-    difftest_skip_ref();
-  }
-  else if(addr_r == CONFIG_TIME + 8){
-    time(&raw_time);
-    time_info = localtime(&raw_time);
-    ret = (uint32_t)time_info->tm_hour;
-    difftest_skip_ref();
-  }
-  else if(addr_r == CONFIG_TIME + 12){
-    time(&raw_time);
-    time_info = localtime(&raw_time);
-    ret = (uint32_t)time_info->tm_mday;
-    difftest_skip_ref();
-  }
-  else if(addr_r == CONFIG_TIME + 16){
-    time(&raw_time);
-    time_info = localtime(&raw_time);
-    ret = (uint32_t)time_info->tm_mon;
-    difftest_skip_ref();
-  }
-  else if(addr_r == CONFIG_TIME + 20){
-    time(&raw_time);
-    time_info = localtime(&raw_time);
-    ret = (uint32_t)time_info->tm_year;
-    difftest_skip_ref();
-  }
-  else{
-    ret = pmem_read(addr_r, (uint8_t)len);
-  }
-  return (int)ret;
-}
+//   if(addr_r == CONFIG_RTC_MMIO){
+//     ret = (uint32_t)us;
+//     // printf("80 mark\n");
+//     difftest_skip_ref();
+//   }
+//   else if(addr_r == CONFIG_RTC_MMIO + 4){
+//     ret = us >> 32;
+//     difftest_skip_ref();
+//   }
+//   else if(addr_r == CONFIG_TIME){
+//     time(&raw_time);
+//     time_info = localtime(&raw_time);
+//     ret = (uint32_t)time_info->tm_sec;
+//     difftest_skip_ref();
+//   }
+//   else if(addr_r == CONFIG_TIME + 4){
+//     time(&raw_time);
+//     time_info = localtime(&raw_time);
+//     ret = (uint32_t)time_info->tm_min;
+//     difftest_skip_ref();
+//   }
+//   else if(addr_r == CONFIG_TIME + 8){
+//     time(&raw_time);
+//     time_info = localtime(&raw_time);
+//     ret = (uint32_t)time_info->tm_hour;
+//     difftest_skip_ref();
+//   }
+//   else if(addr_r == CONFIG_TIME + 12){
+//     time(&raw_time);
+//     time_info = localtime(&raw_time);
+//     ret = (uint32_t)time_info->tm_mday;
+//     difftest_skip_ref();
+//   }
+//   else if(addr_r == CONFIG_TIME + 16){
+//     time(&raw_time);
+//     time_info = localtime(&raw_time);
+//     ret = (uint32_t)time_info->tm_mon;
+//     difftest_skip_ref();
+//   }
+//   else if(addr_r == CONFIG_TIME + 20){
+//     time(&raw_time);
+//     time_info = localtime(&raw_time);
+//     ret = (uint32_t)time_info->tm_year;
+//     difftest_skip_ref();
+//   }
+//   else{
+//     ret = pmem_read(addr_r, (uint8_t)len);
+//   }
+//   return (int)ret;
+// }
 
-extern "C" void pmem_write_v(int addr, char mask, int data){
-  paddr_t addr_r = (paddr_t)addr;
-  word_t data_r = (word_t)data;
-  uint8_t mask_r = (uint8_t)mask;
-  if (addr_r == CONFIG_SERIAL_MMIO){ // uart
-    char ch = (char)(data & 0x000000ff);
-    putc(ch, stderr);
-    difftest_skip_ref();
-  }
-  else if(addr_r == CONFIG_RTC_MMIO || addr_r == CONFIG_RTC_MMIO + 4){
-    difftest_skip_ref();
-  }
-  else{
-    pmem_write(addr_r, mask_r, data_r);
-  } 
-}
+// extern "C" void pmem_write_v(int addr, char mask, int data){
+//   paddr_t addr_r = (paddr_t)addr;
+//   word_t data_r = (word_t)data;
+//   uint8_t mask_r = (uint8_t)mask;
+//   if (addr_r == CONFIG_SERIAL_MMIO){ // uart
+//     char ch = (char)(data & 0x000000ff);
+//     putc(ch, stderr);
+//     difftest_skip_ref();
+//   }
+//   else if(addr_r == CONFIG_RTC_MMIO || addr_r == CONFIG_RTC_MMIO + 4){
+//     difftest_skip_ref();
+//   }
+//   else{
+//     pmem_write(addr_r, mask_r, data_r);
+//   } 
+// }
 
-extern "C" int rand_v(){
-  // return rand() % 16 + 1;
-  return 32;
-}
+// extern "C" int rand_v(){
+//   // return rand() % 16 + 1;
+//   return 32;
+// }
 
 
 

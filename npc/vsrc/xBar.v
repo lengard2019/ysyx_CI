@@ -1,26 +1,9 @@
-module xBar(
+`include "npc_config.vh"
+
+module ysyx_25040102_xBar(
     input               clk,
     input               reset,
-
-    input               ifu_valid,
-    input               decode_valid,
-
-    output              ifu_awready,
-    input               ifu_awvalid, 
-    input   [31:0]      ifu_awaddr,  
-    input   [3:0]       ifu_awid,    
-    input   [7:0]       ifu_awlen,   
-    input   [2:0]       ifu_awsize,  
-    input   [1:0]       ifu_awburst, 
-    output              ifu_wready,  
-    input               ifu_wvalid,  
-    input   [31:0]      ifu_wdata,   
-    input   [3:0]       ifu_wstrb,   
-    input               ifu_wlast,   
-    input               ifu_bready,  
-    output              ifu_bvalid,  
-    output  [1:0]       ifu_bresp,   
-    output  [3:0]       ifu_bid,     
+    
     output              ifu_arready, 
     input               ifu_arvalid, 
     input   [31:0]      ifu_araddr,  
@@ -93,20 +76,53 @@ module xBar(
     input   [1:0]       io_master_rresp,   
     input   [31:0]      io_master_rdata,   
     input               io_master_rlast,   
-    input   [3:0]       io_master_rid
+    input   [3:0]       io_master_rid,
+
+    input               clint_master_awready,
+    output              clint_master_awvalid, 
+    output  [31:0]      clint_master_awaddr,  
+    output  [3:0]       clint_master_awid,    
+    output  [7:0]       clint_master_awlen,   
+    output  [2:0]       clint_master_awsize,  
+    output  [1:0]       clint_master_awburst, 
+    input               clint_master_wready,  
+    output              clint_master_wvalid,  
+    output  [31:0]      clint_master_wdata,   
+    output  [3:0]       clint_master_wstrb,   
+    output              clint_master_wlast,   
+    output              clint_master_bready,  
+    input               clint_master_bvalid,  
+    input   [1:0]       clint_master_bresp,   
+    input   [3:0]       clint_master_bid,     
+    input               clint_master_arready, 
+    output              clint_master_arvalid, 
+    output  [31:0]      clint_master_araddr,  
+    output  [3:0]       clint_master_arid,    
+    output  [7:0]       clint_master_arlen,   
+    output  [2:0]       clint_master_arsize,  
+    output  [1:0]       clint_master_arburst, 
+    output              clint_master_rready,  
+    input               clint_master_rvalid,  
+    input   [1:0]       clint_master_rresp,   
+    input   [31:0]      clint_master_rdata,   
+    input               clint_master_rlast,   
+    input   [3:0]       clint_master_rid
+    
 );
 
+    localparam  IDLE        = 0;
+    localparam  IFU_ADDR    = 1;
+    localparam  LSU_ADDR    = 2;
 
-    reg     current_state;
-    reg     next_state;
+    wire    clint;
+    assign  clint   = ((lsu_araddr[31:24] == 8'h02));
 
+    reg     [1:0]   current_state;
+    reg     [1:0]   next_state;
 
-    localparam  IFU_STATE   = 0;
-    localparam  LSU_STATE   = 1;
-
-    always @(posedge clk or posedge reset) begin
-        if(reset == 1'b1) begin
-            current_state   <= IFU_STATE;
+    always @(posedge clk) begin
+        if(reset) begin
+            current_state   <= IDLE;
         end
         else begin
             current_state   <= next_state;
@@ -115,83 +131,104 @@ module xBar(
 
     always @(*) begin
         case(current_state)
-            IFU_STATE: begin
-                if(decode_valid == 1'b1) begin
-                    next_state      = LSU_STATE;
+            
+            IDLE: begin
+                if(lsu_awvalid == 1'b1 || lsu_arvalid == 1'b1) begin
+                    next_state      = LSU_ADDR;
+                end
+                else if(ifu_arvalid == 1'b1) begin
+                    next_state      = IFU_ADDR;
+                end
+                else begin
+                    next_state      = IDLE;
                 end
             end
-            LSU_STATE: begin
-                if(ifu_valid == 1'b1) begin
-                    next_state      = IFU_STATE;
+
+            IFU_ADDR: begin
+                if(ifu_arready == 1'b1) begin
+                    next_state      = IDLE;
                 end
+                else begin
+                    next_state      = IFU_ADDR;
+                end
+            end
+
+            LSU_ADDR: begin
+                if(lsu_arready == 1'b1 || lsu_awready == 1'b1) begin
+                    next_state      = IDLE;
+                end
+                else begin
+                    next_state      = LSU_ADDR;
+                end
+            end
+
+            default: begin
+                next_state  = IDLE;
             end
         endcase
     end
 
-    assign  ifu_awready             = (current_state == IFU_STATE) ? io_master_awready : 1'b0;
-    assign  lsu_awready             = (current_state == LSU_STATE) ? io_master_awready : 1'b0;
+    assign  lsu_awready             = (current_state == LSU_ADDR) ? (clint == 1'b1) ? clint_master_awready : io_master_awready : 0;
+    assign  lsu_wready              = (clint == 1'b1) ? clint_master_wready  : io_master_wready  ;
+    assign  lsu_bvalid              = (clint == 1'b1) ? clint_master_bvalid  : io_master_bvalid  ;
+    assign  lsu_bresp               = (clint == 1'b1) ? clint_master_bresp   : io_master_bresp   ;
+    assign  lsu_bid                 = (clint == 1'b1) ? clint_master_bid     : io_master_bid     ;
 
-    assign  ifu_wready              = (current_state == IFU_STATE) ? io_master_wready : 1'b0;
-    assign  lsu_wready              = (current_state == LSU_STATE) ? io_master_wready : 1'b0;
-
-    assign  ifu_bvalid              = (current_state == IFU_STATE) ? io_master_bvalid : 1'b0;
-    assign  lsu_bvalid              = (current_state == LSU_STATE) ? io_master_bvalid : 1'b0;
-
-    assign  ifu_bresp               = (current_state == IFU_STATE) ? io_master_bresp : 2'b00;
-    assign  lsu_bresp               = (current_state == LSU_STATE) ? io_master_bresp : 2'b00;
-
-    assign  ifu_bid                 = (current_state == IFU_STATE) ? io_master_bid : 4'b0000;
-    assign  lsu_bid                 = (current_state == LSU_STATE) ? io_master_bid : 4'b0000;
-
-    assign  ifu_arready             = (current_state == IFU_STATE) ? io_master_arready : 1'b0;
-    assign  lsu_arready             = (current_state == LSU_STATE) ? io_master_arready : 1'b0;
+    assign  ifu_arready             = (current_state == IFU_ADDR) ? io_master_arready : 1'b0;
+    assign  lsu_arready             = (current_state == LSU_ADDR) ? (clint == 1'b1) ? clint_master_arready : io_master_arready : 0;
     
-    assign  ifu_rvalid              = (current_state == IFU_STATE) ? io_master_rvalid : 1'b0;
-    assign  lsu_rvalid              = (current_state == LSU_STATE) ? io_master_rvalid : 1'b0;
+    assign  ifu_rvalid              = (io_master_rid == 4'b0) ? io_master_rvalid : 1'b0;
+    assign  lsu_rvalid              = (io_master_rid == 4'b1) ? io_master_rvalid : (clint == 1'b1) ? clint_master_rvalid : 0;
 
-    assign  ifu_rresp               = (current_state == IFU_STATE) ? io_master_rresp : 2'b0;
-    assign  lsu_rresp               = (current_state == LSU_STATE) ? io_master_rresp : 2'b0;
+    assign  ifu_rresp               = (io_master_rid == 4'b0) ? io_master_rresp : 2'b0;
+    assign  lsu_rresp               = (io_master_rid == 4'b1) ? io_master_rresp : (clint == 1'b1) ? clint_master_rresp : 0;
 
-    assign  ifu_rdata               = (current_state == IFU_STATE) ? io_master_rdata : 32'b0;
-    assign  lsu_rdata               = (current_state == LSU_STATE) ? io_master_rdata : 32'b0;
+    assign  ifu_rdata               = (io_master_rid == 4'b0) ? io_master_rdata : 32'b0;
+    assign  lsu_rdata               = (io_master_rid == 4'b1) ? io_master_rdata : (clint == 1'b1) ? clint_master_rdata : 0;
 
-    assign  ifu_rlast               = (current_state == IFU_STATE) ? io_master_rlast : 1'b0;
-    assign  lsu_rlast               = (current_state == LSU_STATE) ? io_master_rlast : 1'b0;
+    assign  ifu_rlast               = (io_master_rid == 4'b0) ? io_master_rlast : 1'b0;
+    assign  lsu_rlast               = (io_master_rid == 4'b1) ? io_master_rlast : (clint == 1'b1) ? clint_master_rlast : 0;
 
-    assign  ifu_rid                 = (current_state == IFU_STATE) ? io_master_rid : 4'b0000;
-    assign  lsu_rid                 = (current_state == LSU_STATE) ? io_master_rid : 4'b0000;
+    assign  ifu_rid                 = 4'b0000;
+    assign  lsu_rid                 = 4'b0001;
 
+    assign  io_master_awvalid       = (current_state == LSU_ADDR) ? (clint == 1'b1) ? 0 : lsu_awvalid : 0;        
+    assign  io_master_awaddr        = (current_state == LSU_ADDR) ? (clint == 1'b1) ? 0 : lsu_awaddr  : 0;      
+    assign  io_master_awid          = (current_state == LSU_ADDR) ? (clint == 1'b1) ? 0 : lsu_awid    : 0;  
+    assign  io_master_awlen         = (current_state == LSU_ADDR) ? (clint == 1'b1) ? 0 : lsu_awlen   : 0;    
+    assign  io_master_awsize        = (current_state == LSU_ADDR) ? (clint == 1'b1) ? 0 : lsu_awsize  : 0;      
+    assign  io_master_awburst       = (current_state == LSU_ADDR) ? (clint == 1'b1) ? 0 : lsu_awburst : 0;        
+    assign  io_master_wvalid        = (clint == 1'b1) ? 0 : lsu_wvalid ;
+    assign  io_master_wdata         = (clint == 1'b1) ? 0 : lsu_wdata  ;    
+    assign  io_master_wstrb         = (clint == 1'b1) ? 0 : lsu_wstrb  ;    
+    assign  io_master_wlast         = (clint == 1'b1) ? 0 : lsu_wlast  ;    
+    assign  io_master_bready        = (clint == 1'b1) ? 0 : lsu_bready ;       
+    assign  io_master_arvalid       = (current_state == IFU_ADDR) ? ifu_arvalid : (current_state == LSU_ADDR) ? (clint == 1'b1) ? 0 : lsu_arvalid  : 0;        
+    assign  io_master_araddr        = (current_state == IFU_ADDR) ? ifu_araddr  : (current_state == LSU_ADDR) ? (clint == 1'b1) ? 0 : lsu_araddr   : 0;      
+    assign  io_master_arid          = (current_state == IFU_ADDR) ? ifu_arid    : (current_state == LSU_ADDR) ? (clint == 1'b1) ? 0 : lsu_arid     : 0;  
+    assign  io_master_arlen         = (current_state == IFU_ADDR) ? ifu_arlen   : (current_state == LSU_ADDR) ? (clint == 1'b1) ? 0 : lsu_arlen    : 0;    
+    assign  io_master_arsize        = (current_state == IFU_ADDR) ? ifu_arsize  : (current_state == LSU_ADDR) ? (clint == 1'b1) ? 0 : lsu_arsize   : 0;      
+    assign  io_master_arburst       = (current_state == IFU_ADDR) ? ifu_arburst : (current_state == LSU_ADDR) ? (clint == 1'b1) ? 0 : lsu_arburst  : 0;        
+    assign  io_master_rready        = (io_master_rid == 4'h0) ? ifu_rready  : (clint == 1'b1) ? 0 : lsu_rready   ;      
 
-    // assign  io_master_awready       = (current_state == IFU_STATE) ? ifu_awready : lsu_awready;        
-    assign  io_master_awvalid       = (current_state == IFU_STATE) ? ifu_awvalid : lsu_awvalid;        
-    assign  io_master_awaddr        = (current_state == IFU_STATE) ? ifu_awaddr  : lsu_awaddr;      
-    assign  io_master_awid          = (current_state == IFU_STATE) ? ifu_awid    : lsu_awid;  
-    assign  io_master_awlen         = (current_state == IFU_STATE) ? ifu_awlen   : lsu_awlen;    
-    assign  io_master_awsize        = (current_state == IFU_STATE) ? ifu_awsize  : lsu_awsize;      
-    assign  io_master_awburst       = (current_state == IFU_STATE) ? ifu_awburst : lsu_awburst;        
-    // assign  io_master_wready        = (current_state == IFU_STATE) ? ifu_wready  : lsu_wready;      
-    assign  io_master_wvalid        = (current_state == IFU_STATE) ? ifu_wvalid  : lsu_wvalid;      
-    assign  io_master_wdata         = (current_state == IFU_STATE) ? ifu_wdata   : lsu_wdata;    
-    assign  io_master_wstrb         = (current_state == IFU_STATE) ? ifu_wstrb   : lsu_wstrb;    
-    assign  io_master_wlast         = (current_state == IFU_STATE) ? ifu_wlast   : lsu_wlast;    
-    assign  io_master_bready        = (current_state == IFU_STATE) ? ifu_bready  : lsu_bready;      
-    // assign  io_master_bvalid        = (current_state == IFU_STATE) ? ifu_bvalid  : lsu_bvalid;      
-    // assign  io_master_bresp         = (current_state == IFU_STATE) ? ifu_bresp   : lsu_bresp;    
-    // assign  io_master_bid           = (current_state == IFU_STATE) ? ifu_bid     : lsu_bid;
-    // assign  io_master_arready       = (current_state == IFU_STATE) ? ifu_arready : lsu_arready;        
-    assign  io_master_arvalid       = (current_state == IFU_STATE) ? ifu_arvalid : lsu_arvalid;        
-    assign  io_master_araddr        = (current_state == IFU_STATE) ? ifu_araddr  : lsu_araddr;      
-    assign  io_master_arid          = (current_state == IFU_STATE) ? ifu_arid    : lsu_arid;  
-    assign  io_master_arlen         = (current_state == IFU_STATE) ? ifu_arlen   : lsu_arlen;    
-    assign  io_master_arsize        = (current_state == IFU_STATE) ? ifu_arsize  : lsu_arsize;      
-    assign  io_master_arburst       = (current_state == IFU_STATE) ? ifu_arburst : lsu_arburst;        
-    assign  io_master_rready        = (current_state == IFU_STATE) ? ifu_rready  : lsu_rready;      
-    // assign  io_master_rvalid        = (current_state == IFU_STATE) ? ifu_rvalid  : lsu_rvalid;      
-    // assign  io_master_rresp         = (current_state == IFU_STATE) ? ifu_rresp   : lsu_rresp;    
-    // assign  io_master_rdata         = (current_state == IFU_STATE) ? ifu_rdata   : lsu_rdata;    
-    // assign  io_master_rlast         = (current_state == IFU_STATE) ? ifu_rlast   : lsu_rlast;    
-    // assign  io_master_rid           = (current_state == IFU_STATE) ? ifu_rid     : lsu_rid;
-
+    assign  clint_master_awvalid    = (current_state == LSU_ADDR) ? (clint == 1'b1) ? lsu_awvalid : 0 : 0;        
+    assign  clint_master_awaddr     = (current_state == LSU_ADDR) ? (clint == 1'b1) ? lsu_awaddr  : 0 : 0;      
+    assign  clint_master_awid       = (current_state == LSU_ADDR) ? (clint == 1'b1) ? lsu_awid    : 0 : 0;  
+    assign  clint_master_awlen      = (current_state == LSU_ADDR) ? (clint == 1'b1) ? lsu_awlen   : 0 : 0;    
+    assign  clint_master_awsize     = (current_state == LSU_ADDR) ? (clint == 1'b1) ? lsu_awsize  : 0 : 0;      
+    assign  clint_master_awburst    = (current_state == LSU_ADDR) ? (clint == 1'b1) ? lsu_awburst : 0 : 0;        
+    assign  clint_master_wvalid     = lsu_wvalid ;      
+    assign  clint_master_wdata      = lsu_wdata  ;    
+    assign  clint_master_wstrb      = lsu_wstrb  ;    
+    assign  clint_master_wlast      = lsu_wlast  ;    
+    assign  clint_master_bready     = lsu_bready ;       
+    assign  clint_master_arvalid    = (current_state == LSU_ADDR) ? (clint == 1'b1) ? lsu_arvalid : 0 : 0;        
+    assign  clint_master_araddr     = (current_state == LSU_ADDR) ? (clint == 1'b1) ? lsu_araddr  : 0 : 0;      
+    assign  clint_master_arid       = (current_state == LSU_ADDR) ? (clint == 1'b1) ? lsu_arid    : 0 : 0;  
+    assign  clint_master_arlen      = (current_state == LSU_ADDR) ? (clint == 1'b1) ? lsu_arlen   : 0 : 0;    
+    assign  clint_master_arsize     = (current_state == LSU_ADDR) ? (clint == 1'b1) ? lsu_arsize  : 0 : 0;      
+    assign  clint_master_arburst    = (current_state == LSU_ADDR) ? (clint == 1'b1) ? lsu_arburst : 0 : 0;        
+    assign  clint_master_rready     = (clint_master_rid == 4'h1) ? (clint == 1'b1) ? lsu_rready  : 0  : 0;      
 
 
 endmodule

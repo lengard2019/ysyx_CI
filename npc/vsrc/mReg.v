@@ -1,11 +1,15 @@
-module mReg (
+`include "npc_config.vh"
+module ysyx_25040102_mReg (
     input           clk,
-    // input   [31:0]  rs1,
-    input   [3:0]   mode, // csr_mode
-    input   [31:0]  imm,
+    input           mret,
+    input           mcause_wr, // ecall
+    input   [3:0]   mcause,
+
+    input   [7:0]   imm,
     input   [31:0]  pc,
     input           mRegwr, // 写使能
     input   [31:0]  wrData, // write this mreg
+    input           mcause_pc,
 
     output  [31:0]  mretPc,
     output          mpcWr,
@@ -13,79 +17,83 @@ module mReg (
     // output  [31:0]  mWr_Data  // to mReg
 );
 
-    reg     [31:0]  mcause_r;
+    reg     [3:0]   mcause_r;
     reg     [31:0]  mepc_r;
     reg     [31:0]  mstatus_r;
     reg     [31:0]  mtvec_r;
 
     reg     [31:0]  mRegData_r;
-    // reg     [31:0]  data_wr;
     reg     [31:0]  mretPc_r;
     reg             mpcWr_r;
+    wire    [31:0]  mvendorid;
+    wire    [31:0]  marchid;
 
-    // assign  mWr_Data        = data_wr;
     assign  mRegData        = mRegData_r;
     assign  mretPc          = mretPc_r;
     assign  mpcWr           = mpcWr_r;
 
+    assign  mvendorid       = 32'h79737978;
+    assign  marchid         = 32'h017e14e6;
 
     // read
     always @(*) begin // 给通用寄存器
         case (imm)
-            32'h00000341: mRegData_r = mepc_r;
-            32'h00000342: mRegData_r = mcause_r;
-            32'h00000300: mRegData_r = mstatus_r;
-            32'h00000305: mRegData_r = mtvec_r;
-            default: mRegData_r = 32'hffffffff;
+            8'h41: mRegData_r = mepc_r;
+            8'h42: mRegData_r = {28'h0, mcause_r};
+            8'h00: mRegData_r = mstatus_r;
+            8'h05: mRegData_r = mtvec_r;
+            8'h11: mRegData_r = mvendorid;
+            8'h12: mRegData_r = marchid;
+            default: mRegData_r = 32'h00;
         endcase
     end
 
-    // always @(*) begin
-    //     if(mode == 4'b0001)begin
-    //         data_wr = mRegData_r | rs1;
-    //     end
-    //     else begin
-    //         data_wr = rs1;
-    //     end
-    // end
-
-
-    // write
-    always @(posedge clk) begin // 写mReg
-        if(mRegwr == 1'b1) begin
-            if(mode == 4'b0001 || mode == 4'b0010) begin
-                if(imm == 32'h00000341) begin
-                    mepc_r      <= wrData;
-                end
-                else if(imm == 32'h00000342) begin
-                    mcause_r    <= wrData;
-                end
-                else if(imm == 32'h00000300) begin
-                    mstatus_r   <= wrData;
-                end
-                else if(imm == 32'h00000305) begin
-                    mtvec_r     <= wrData;
-                end
-            end
-            else if(mode == 4'b1111) begin // ecall
-                mcause_r        <= 32'h0000000b;
-                mepc_r          <= pc;
-            end
+    // mcause_r
+    always @(posedge clk) begin
+        if(mcause_wr == 1'b1) begin
+            mcause_r    <= mcause;
+        end
+        else if(mRegwr == 1'b1 && imm == 8'h42) begin
+            mcause_r    <= wrData[3:0];
         end
     end
 
-    // read next_pc
-    always @(*) begin // mretPc_r
-        if(mode == 4'b1111) begin       // ecall
-            mretPc_r = mtvec_r;
-            mpcWr_r = 1'b1;
+    // mepc_r
+    always @(posedge clk) begin
+        if(mcause_wr == 1'b1) begin
+            mepc_r    <= pc;
         end
-        else if(mode == 4'b1011) begin  // mret
+        else if(mRegwr == 1'b1 && imm == 8'h41) begin
+            mepc_r    <= wrData;
+        end
+    end
+
+    // mtvec_r
+    always @(posedge clk) begin
+        if(mRegwr == 1'b1 && imm == 8'h05) begin
+            mtvec_r     <= wrData;
+        end
+    end
+
+    // mstatus_r
+    always @(posedge clk) begin
+        if(mRegwr == 1'b1 && imm == 8'h00) begin
+            mstatus_r   <= wrData;
+        end
+    end
+
+    // // read next_pc
+    always @(*) begin // mretPc_r
+        if(mret == 1'b1) begin       // mret
             mretPc_r = mepc_r;
             mpcWr_r = 1'b1;
         end
+        else if(mcause_pc == 1'b1) begin  // ecall
+            mretPc_r = mtvec_r;
+            mpcWr_r = 1'b1;
+        end
         else begin
-            mretPc_r = 32'hffffffff;
+            mretPc_r = 32'h00000000;
             mpcWr_r = 1'b0;
         end
     end

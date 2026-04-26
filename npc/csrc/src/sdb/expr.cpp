@@ -350,7 +350,7 @@ static void token_special(){
       paddr_t addr = 0;
       sscanf(tokens[i+1].str,"%x", &addr);
       // printf("%d\n",addr);
-      word_t value = pmem_read(addr,4);
+      word_t value = 0x80000000;
       snprintf(tokens[i+1].str, 11, "0x%08X", value);
       // printf("mark\n");
       // printf("%s\n",tokens[i+1].str);

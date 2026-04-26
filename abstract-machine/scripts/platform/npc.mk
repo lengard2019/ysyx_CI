@@ -9,7 +9,7 @@ AM_SRCS := riscv/npc/start.S \
            platform/dummy/mpe.c
 
 
-NPC_HOME  = /home/dengzibin/ysyx-workbench/npc
+# NPC_HOME  = /home/dengzibin/ysyx-workbench/npc
 CFLAGS    += -fdata-sections -ffunction-sections
 CFLAGS    += -I$(AM_HOME)/am/src/riscv/npc/include
 LDSCRIPTS += $(AM_HOME)/scripts/linker.ld
@@ -25,7 +25,8 @@ CFLAGS += -DMAINARGS_MAX_LEN=$(MAINARGS_MAX_LEN) -DMAINARGS_PLACEHOLDER=\""$(MAI
 
 insert-arg: image
 	@python3 $(AM_HOME)/tools/insert-arg.py $(IMAGE).bin $(MAINARGS_MAX_LEN) "$(MAINARGS_PLACEHOLDER)" "$(mainargs)"
-
+# 	@python3 $(AM_HOME)/tools/bin2hex.py $(IMAGE).bin $(IMAGE).hex 4
+    
 image: image-dep
 	@$(OBJDUMP) -d $(IMAGE).elf > $(IMAGE).txt
 	@echo + OBJCOPY "->" $(IMAGE_REL).bin

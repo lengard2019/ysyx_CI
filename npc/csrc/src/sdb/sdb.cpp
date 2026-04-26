@@ -195,7 +195,7 @@ static int cmd_x(char *args){
     sscanf(baseaddr,"%x", &addr);
     for(int i = 0 ; i < len ; i ++)
     {
-      printf("%08x\n", pmem_read(addr,4));//addr len
+      printf("%08x\n", 0x80000000);//addr len
       addr = addr + 4;
     }
     return 0;

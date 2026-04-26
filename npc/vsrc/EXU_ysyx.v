@@ -1,11 +1,30 @@
-module EXU_ysyx(
+`include "npc_config.vh"
+
+module ysyx_25040102_EXU_ysyx(
     input               clk,
     input               reset,
 
+    input   [31:0]      snpc,
+    input   [31:0]      dnpc,
     input   [31:0]      pc,
 
-    input   [31:0]      rs1,
+    // input   [31:0]      rs1,
     input   [31:0]      rs2,
+
+    input   [31:0]      result,
+    input               less,
+    input               is_compare,
+
+    input               mpcWr,
+    // input   [31:0]      mretPc,
+    input   [3:0]       mcause,
+    output  [3:0]       mcause_out,
+
+    input               mcause_wr,
+    output              mcause_wr_out,
+
+    // input               ebreak,
+    // output              ebreak_out,
 
     input               decode_valid,
     output              decode_ready,
@@ -13,92 +32,79 @@ module EXU_ysyx(
     input               lsu_ready,
     output              lsu_valid,
 
+    input               pc_ready,
+    output              pc_valid,
+    // output  reg [31:0]  Next_pc_ifu,
+
     // lsu ctrl
-    output  [31:0]      lsu_addr, // 内存操作地址
+    // output  [31:0]      lsu_addr, // 内存操作地址
     output  [31:0]      lsu_data, // 写内存数据
     output  [1:0]       lsu_mode, // 00不访存，01 load，11 store，10 mdata
     output  [2:0]       lsu_op,   // memop,指示字节
 
-    // // mreg ctrl
-    // output  [3:0]       mreg_mode, // ALU_ctrl 
-    // output  [31:0]      pc_out,
-    // output  [31:0]      imm_out,
-    // output  [31:0]      mreg_data,
-    // output              mReg_wr,
-
-    output  [31:0]      Next_pc,
+    output  [31:0]      Next_pc,  // next_pc
+    output  [31:0]      pc_out,
     
     // reg ctrl
-    output  [4:0]       Rw_out,
+    output  [3:0]       Rw_out,
     output  [31:0]      result_out,
     output              regwr_out,
 
-
-    // input   [31:0]      mretPc, // 异常的next_pc
-    // input               mpcWr,  // 指示pc
-    input   [31:0]      imm,
-    input   [1:0]       mRegWr,
-    input   [3:0]       csr_mode, 
     input               RegWr,  
     input   [2:0]       branch,
-    input   [1:0]       MemtoReg, // load
+    input               MemtoReg, // load
     input               MemWr,
     input   [2:0]       MemOp,
-    input               ALUAsrc, 
-    input   [1:0]       ALUBsrc, 
-    input   [3:0]       ALUctr,
-    input   [4:0]       Rw       // to reg
-    // input   [31:0]      mWr_Data, // to mreg
+
+    input   [3:0]       Rw,       // to reg
+    input               flush_finish // to mreg
 );
 
-    reg     [31:0]      rs1_r;
     reg     [31:0]      rs2_r;
 
-    // 
-    wire    [31:0]      mretPc_r; // from mReg 
-    wire                mpcWr_r;
-    reg     [1:0]       mRegWr_r; // 写mReg使能
-    wire                csr_wr;
-    reg     [3:0]       csr_mode_r; //
-    
-    reg     [31:0]      imm_r; 
     reg                 RegWr_r;  // 写通用寄存器使能
     reg     [2:0]       branch_r;
-    reg     [1:0]       MemtoReg_r; // load
+    reg                 MemtoReg_r; // load
     reg                 MemWr_r; // store
     reg     [2:0]       MemOp_r;
-    reg                 ALUAsrc_r; 
-    reg     [1:0]       ALUBsrc_r; 
-    reg     [3:0]       ALUctr_r;
+
+    reg     [31:0]      snpc_r;
+    reg     [31:0]      dnpc_r;
+    reg     [3:0]       Rw_r;
+    reg     [31:0]      Next_pc_r;
+    reg     [31:0]      result_r;
+    reg                 less_r;
+    reg                 is_compare_r;
+    reg                 mpcWr_r;
+    // reg                 ebreak_r;
     reg     [31:0]      pc_r;
-    reg     [4:0]       Rw_r;
+    reg     [3:0]       mcause_r;
+    reg                 mcause_wr_r;
 
-    reg     [3:0]       current_state;
-    reg     [3:0]       next_state;
+    reg     [1:0]       current_state;
+    reg     [1:0]       next_state;
 
-    localparam IDLE             = 0;
-    localparam WAIT_DEVALID     = 1;
-    localparam WAIT_LSUREADY    = 2;
+    localparam WAIT_DEVALID     = 0;
+    localparam WAIT_LSUREADY    = 1;
+    localparam WAIT_PCREADY     = 2;
+    localparam WAIT_DNPC        = 3;
 
-
-    always @(posedge clk or posedge reset) begin
+    always @(posedge clk) begin
         if(reset == 1'b1) begin
-            current_state       <= IDLE;
+            current_state       <= WAIT_DEVALID;
         end
         else begin
             current_state       <= next_state;
         end
     end
 
+    wire    [1:0]   mux;
+
     always @(*) begin
         
         case(current_state)
 
-            IDLE: begin
-                next_state = WAIT_DEVALID;
-            end
-
-            WAIT_DEVALID: begin
+            WAIT_DEVALID: begin // 阻塞
                 if(decode_valid == 1'b1) begin
                     next_state = WAIT_LSUREADY;
                 end
@@ -109,163 +115,121 @@ module EXU_ysyx(
 
             WAIT_LSUREADY: begin
                 if(lsu_ready == 1'b1) begin
-                    next_state = IDLE;
+                    if(mux == 2'b01) begin // snpc
+                        next_state = WAIT_DEVALID;
+                    end
+                    else begin // flush
+                        next_state = WAIT_PCREADY;
+                    end
                 end
                 else begin
                     next_state = WAIT_LSUREADY;
                 end
             end
 
-            default: begin
-                next_state = IDLE;
+            WAIT_PCREADY: begin
+                if(pc_ready == 1'b1) begin
+                    next_state  = WAIT_DNPC;
+                end
+                else begin
+                    next_state  = WAIT_PCREADY;
+                end
+            end
+
+            WAIT_DNPC: begin
+                if(decode_valid == 1'b1 && flush_finish == 1'b1) begin
+                    next_state = WAIT_LSUREADY;
+                end
+                else begin
+                    next_state  = WAIT_DNPC;
+                end
             end
 
         endcase
     end
 
-    assign  decode_ready    = (current_state == WAIT_DEVALID) ? 1'b1 : 1'b0;
-    assign  lsu_valid       = (current_state == WAIT_LSUREADY) ? 1'b1 : 1'b0;
+    assign  decode_ready    = (current_state == WAIT_DEVALID || current_state == WAIT_DNPC);
+    assign  lsu_valid       = (current_state == WAIT_LSUREADY);
+    assign  pc_valid        = (current_state == WAIT_PCREADY);
 
-    assign  lsu_addr        = result;
     assign  lsu_data        = rs2_r;
-    assign  lsu_mode        = (MemWr_r == 1'b1) ? 2'b11 : MemtoReg_r;
+    assign  lsu_mode        = (MemWr_r) ? 2'b11 : {1'b0, MemtoReg_r};
     assign  lsu_op          = MemOp_r;
 
-    // // mreg
-    // assign  mreg_mode       = ALUctr_r;
-    // assign  pc_out          = pc_r;
-    // assign  imm_out         = imm_r;
-    // assign  mReg_wr         = mRegWr_r;
+    wire    [31:0]  result_com;
+
+    assign  result_com = ((is_compare_r == 1'b1) ? {31'b0, less_r} : result_r);
 
     // assign  
-    assign  Rw_out          = Rw_r;
-    assign  result_out      = (mRegWr_r == 2'b11) ? mreg_data : result; // to reg
-    assign  regwr_out       = RegWr_r | mRegWr_r[0];
+    assign  Rw_out          = (current_state == WAIT_LSUREADY) ? Rw_r : 4'h0;
+    assign  result_out      = (mux == 2'b00) ? snpc_r : result_com;
+    assign  regwr_out       = (current_state == WAIT_LSUREADY) ? RegWr_r: 1'b0;
+    // assign  ebreak_out      = ebreak_r;
+
+    assign  pc_out          = pc_r;
+    assign  mcause_out      = mcause_r;
+    assign  mcause_wr_out   = mcause_wr_r;
 
 
-    always @(posedge clk or posedge reset) begin
-        if(reset == 1'b1) begin
-            rs1_r           <= 0;  
-            rs2_r           <= 0;  
-            // mretPc_r        <= 0;
-            // mpcWr_r         <= 0;
-            imm_r           <= 0;  
-            mRegWr_r        <= 0;
-            csr_mode_r      <= 0;      
-            RegWr_r         <= 0;  
-            branch_r        <= 0;      
-            MemtoReg_r      <= 0;      
-            MemWr_r         <= 0;  
-            MemOp_r         <= 0;  
-            ALUAsrc_r       <= 0;      
-            ALUBsrc_r       <= 0;      
-            ALUctr_r        <= 0;
-            pc_r            <= 0;
-            Rw_r            <= 0;
-        end
-        else begin
-            if(decode_valid == 1'b1 && decode_ready == 1'b1) begin
-                rs1_r           <= rs1;
-                rs2_r           <= rs2;
-                // mretPc_r        <= mretPc;
-                // mpcWr_r         <= mpcWr;
-                imm_r           <= imm;
-                mRegWr_r        <= mRegWr;
-                csr_mode_r      <= csr_mode;
-                RegWr_r         <= RegWr;
-                branch_r        <= branch;
-                MemtoReg_r      <= MemtoReg;
-                MemWr_r         <= MemWr;
-                MemOp_r         <= MemOp;
-                ALUAsrc_r       <= ALUAsrc;
-                ALUBsrc_r       <= ALUBsrc;
-                ALUctr_r        <= ALUctr;
-                pc_r            <= pc;
-                Rw_r            <= Rw;
-            end
-            else begin
-                
-            end
+    always @(posedge clk) begin
+        if(decode_valid == 1'b1 && decode_ready == 1'b1) begin
+            mpcWr_r         <= mpcWr;
+            rs2_r           <= rs2;
+            RegWr_r         <= RegWr;
+            branch_r        <= branch;
+            MemtoReg_r      <= MemtoReg;
+            MemWr_r         <= MemWr;
+            MemOp_r         <= MemOp;
+            less_r          <= less;
+            is_compare_r    <= is_compare;
+            snpc_r          <= snpc;
+            dnpc_r          <= dnpc;
+            Rw_r            <= Rw;
+            result_r        <= result;
+            // ebreak_r        <= ebreak;
+            pc_r            <= pc;
+            mcause_r        <= mcause;
+            mcause_wr_r     <= mcause_wr;
         end
     end
 
 
-    // output declaration of module ALU_ysyx
-    wire        less;
-    wire        zero;
-    wire [31:0] result;
+    wire zero_r     = (result_r == 0);
     
-    ALU_ysyx u_ALU_ysyx(
-        .pc      	(pc_r     ),
-        .rs1     	(rs1_r    ),
-        .rs2     	(rs2_r    ),
-        .imm     	(imm_r    ),
-        .ALUctr  	(ALUctr_r ),
-        .ALUAsrc 	(ALUAsrc_r),
-        .ALUBsrc 	(ALUBsrc_r),
-        .less    	(less     ),
-        .zero    	(zero     ),
-        .result  	(result   )
-    );
-    
-
-    // output declaration of module Branch_Cond
-    wire PCAsrc;
-    wire PCBsrc;
-    
-    Branch_Cond u_Branch_Cond(
+    ysyx_25040102_Branch_Cond u_Branch_Cond(
+        .mpcWr      (mpcWr_r    ),
         .branch 	(branch_r ),
-        .less   	(less     ),
-        .zero   	(zero     ),
-        .PCAsrc 	(PCAsrc   ),
-        .PCBsrc 	(PCBsrc   )
-    );
-    
-
-    // output declaration of module PC_ysyx
-    // wire [31:0] result;
-    
-    PC_ysyx u_PC_ysyx(
-        .imm    	(imm_r    ),
-        .pc     	(pc_r     ),
-        .mpcWr  	(mpcWr_r  ),
-        .mretPc 	(mretPc_r ),
-        .rs1    	(rs1_r    ),
-        .PCAsrc 	(PCAsrc   ),
-        .PCBsrc 	(PCBsrc   ),
-        .result 	(Next_pc  )
+        .less   	(less_r   ),
+        .zero   	(zero_r   ),
+        .mux        (mux      )
     );
 
-    reg     [31:0]      wrData;
+    always @(*) begin // 2'b00 result; 2'b01 snpc; 2'b11 dnpc; 2'b10 mpc
+        case(mux)
+            2'b00: Next_pc_r = result_com;
+            2'b01: Next_pc_r = snpc_r;
+            2'b10: Next_pc_r = snpc_r;
+            2'b11: Next_pc_r = dnpc_r;
+        endcase
+    end
+
+    assign  Next_pc     = Next_pc_r;
 
 
-    wire    [31:0]      mreg_data;
-
-    always @(*) begin
-        if(csr_mode_r == 4'b0001) begin
-            wrData      = rs1_r;
-        end
-        else if(csr_mode_r == 4'b0010) begin
-            wrData      = mreg_data | rs1_r;
-        end
-        else begin
-            wrData      = 32'h0000;
+`ifdef ysyx_25040102_SIM
+    always @(posedge clk) begin
+        if(current_state == WAIT_PCREADY && pc_ready == 1'b1) begin
+            time_add(6);
         end
     end
 
-    assign  csr_wr      = (current_state == WAIT_LSUREADY) ? mRegWr_r[1] : 1'b0;
+    always @(posedge clk) begin
+        if(current_state == WAIT_DNPC) begin
+            cycle_add(6);
+        end
+    end
 
-    mReg u_mReg(
-        .clk        (clk        ),
-        .imm        (imm_r      ),
-        .mode       (csr_mode_r ), // csr操作
-        .mpcWr      (mpcWr_r    ), // to PC_ysyx
-        .mRegData   (mreg_data  ), // to reg
-        .mRegwr     (csr_wr     ), // write en
-        .mretPc 	(mretPc_r   ), // to PC_ysyx
-        .pc         (pc_r       ), // pc
-        .wrData     (wrData     )  // write data
-    );
+`endif 
 
 
 endmodule

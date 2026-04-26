@@ -1,78 +1,83 @@
-module IDU_ysyx(
+`include "npc_config.vh"
+
+module ysyx_25040102_IDU_ysyx(
     input           clk,
     input           reset,
 
     input  [31:0]   pc,
+    input  [31:0]   snpc,
     output [31:0]   pc_out,
+    output [31:0]   snpc_out,
 
     input           inst_valid,
     output          inst_ready,
 
+    input           pc_valid,
+
     input           decode_ready,
-    output          decode_valid,
+    output          decode_valid, // to EXU
+
+    // input           Reg_wr_exu,
+    input  [3:0]    Rw_exu,
+    input  [1:0]    load_exu,
+    // input           Reg_wr_lsu,
+    input  [3:0]    Rw_lsu,
+    input  [1:0]    load_lsu,
 
     input  [31:0]   inst,
+    input           in_pslverr,
+    input           flush_finish,
+    output          flush_finish_out,
 
-    // output [2:0]    ExtOp, // 指令类型
+    // output          ebreak,
     output [31:0]   imm,
     
     output          RegWr,
     output [2:0]    Branch,
-    output [1:0]    MemtoReg,
+    output          MemtoReg,
     output          MemWr,
     output [2:0]    MemOp,
     output          ALUAsrc,
-    output [1:0]    ALUBsrc,
+    output          ALUBsrc,
     output [3:0]    ALUctr,
     
     // mreg
     output [1:0]    mRegWr,
-    output [3:0]    csr_mode,
+    output [3:0]    mcause,
+    output          mcause_wr,
+    output          mret,
 
-    output [4:0]    Ra,
-    output [4:0]    Rb,
-    output [4:0]    Rw
+    output [3:0]    Ra,
+    output [3:0]    Rb,
+    output [3:0]    Rw
 );
 
+    wire    [4:0]       op;
+    wire    [2:0]       fun3;
+    wire    [6:0]       fun7;
 
-    assign Ra           = instr[19:15];
-    assign Rb           = instr[24:20];
-    assign Rw           = instr[11:7];
-
-    localparam N_TYPE = 3'b000;
-    localparam R_TYPE = 3'b001;
-    localparam I_TYPE = 3'b010;
-    localparam S_TYPE = 3'b011;
-    localparam B_TYPE = 3'b100;
-    localparam U_TYPE = 3'b101;
-    localparam J_TYPE = 3'b110;
-
-    reg     [6:0]       op;
-
-    reg     [31:0]      immU;
-    reg     [31:0]      immI;
-    reg     [31:0]      immS;
-    reg     [31:0]      immB;
-    reg     [31:0]      immJ;
-
-    reg     [31:0]      pc_out_r;
-
-
-    reg     [16:0]      val;
-
-    reg     [5:0]       val_m;
-
-
+    wire    [31:0]      immU;
+    wire    [31:0]      immI;
+    wire    [31:0]      immS;
+    wire    [31:0]      immB;
+    wire    [31:0]      immJ;
+    reg     [31:0]      pc_r;
+    reg     [1:0]       val_m;
     reg     [31:0]      instr;
+    reg     [31:0]      snpc_r;
+    reg                 pslverr;
 
-    wire    [2:0]       ExtOp;
+    assign Ra           = instr[18:15];
+    assign Rb           = instr[23:20];
+    assign Rw           = instr[10:7];
 
 
-    assign {RegWr, Branch[2:0], MemtoReg[1:0], MemWr, MemOp[2:0], ALUAsrc, ALUBsrc[1:0], ALUctr[3:0] } = val;
 
-    assign {mRegWr, csr_mode} = val_m;
+    assign  mRegWr = val_m;
 
-    assign op   = instr[6:0];
+    assign op   = instr[6:2];
+    assign fun3 = instr[14:12];
+    assign fun7 = instr[31:25];
 
     assign immU = {{instr[31:12]}, 12'h000};
     assign immI = {{20{instr[31]}}, instr[31:20]};
@@ -80,114 +85,210 @@ module IDU_ysyx(
     assign immB = {{20{instr[31]}}, instr[7], instr[30:25], instr[11:8], 1'b0};
     assign immJ = {{12{instr[31]}}, instr[19:12], instr[20], instr[30:21], 1'b0};
 
+    reg             RegWr_r, ALUAsrc_r, ALUBsrc_r;
+    reg [2:0]       Branch_r;
+    reg [3:0]       ALUctr_r;
 
-    MuxKeyWithDefault #(10, 7, 3) u_extop // 通过操作码识别指令类型
-    (
-        ExtOp,
-        op,
-        N_TYPE,
-        {
-            7'b0110111, U_TYPE,
-            7'b0010111, U_TYPE,
-            7'b1101111, J_TYPE,
-            7'b1100111, I_TYPE,
-            7'b0000011, I_TYPE,
-            7'b0010011, I_TYPE,
-            7'b0110011, R_TYPE,
-            7'b1100011, B_TYPE,
-            7'b0100011, S_TYPE,
-            7'b1110011, I_TYPE
-        }
-    );
-
-    MuxKeyWithDefault #(5, 3, 32) u_imm_gen // 生成立即数
+    ysyx_25040102_MuxKeyWithDefault #(10, 5, 32) u_extop // 通过操作码识别指令类型
     (
         imm,
-        ExtOp,
-        32'h00000000,
+        op,
+        32'h0,
         {
-            U_TYPE, immU,
-            J_TYPE, immJ,
-            I_TYPE, immI,
-            B_TYPE, immB,
-            S_TYPE, immS
+            5'b01101, immU,
+            5'b00101, immU,
+            5'b11011, immJ,
+            5'b11001, immI,
+            5'b00000, immI,
+            5'b00100, immI,
+            5'b01100, immI,
+            5'b11000, immB,
+            5'b01000, immS,
+            5'b11100, immI
         }
     );
 
+    wire    illegal;
+
+    ysyx_25040102_MuxKeyWithDefault #(11, 5, 1) u_ill_inst // 无效指令
+    (
+        illegal,
+        op,
+        1'h1,
+        {
+            5'b01101, 1'b0,
+            5'b00101, 1'b0,
+            5'b11011, 1'b0,
+            5'b11001, 1'b0,
+            5'b00000, 1'b0,
+            5'b00100, 1'b0,
+            5'b01100, 1'b0,
+            5'b11000, 1'b0,
+            5'b01000, 1'b0,
+            5'b11100, 1'b0,
+            5'b00011, 1'b0
+        }
+    );
+
+    wire    ebreak;
+    wire    ecall   = (op == 5'b11100 && fun3 == 3'b000 && fun7 == 7'b0000000);
+
+    assign  mret    = (op == 5'b11100 && fun3 == 3'b000 && fun7 == 7'b0011000);
+
+    reg     [3:0]   mcause_r;
+    reg     cause_wr;
+
+    assign  mcause      = mcause_r;
+    assign  mcause_wr   = cause_wr;
+
+    always @(*) begin
+        if(pc_r[1:0] != 2'b00) begin // Instruction address misaligned
+            mcause_r    = 4'h0;
+            cause_wr    = 1'b1;
+        end
+        else if(pslverr == 1'b1) begin // Instruction access fault
+            mcause_r    = 4'h1;
+            cause_wr    = 1'b1;
+        end
+        else if(illegal == 1'b1) begin // Illegal Instruction
+            mcause_r    = 4'h2;
+            cause_wr    = 1'b1;
+        end
+        else if(ebreak == 1'b1) begin // ebreak
+            mcause_r    = 4'h3;
+            cause_wr    = 1'b1;
+        end
+        else if(ecall == 1'b1) begin // Environment call from M-mode
+            mcause_r    = 4'hb;
+            cause_wr    = 1'b1;
+        end
+        else begin
+            mcause_r    = 4'h0;
+            cause_wr    = 1'b0;
+        end
+    end
+
     // 特权
-    // mRegwr  11表示与寄存器交换，10表示只写csr不写通用寄存器，00表示mret
     always @(*) begin
+        if(op == 5'b11100) begin 
+            if(fun3 == 3'b001) begin // csrrw
+                val_m = 2'b01;
+            end
+            else if(fun3 == 3'b010) begin // csrrs |=
+                val_m = 2'b11;
+            end
+            else begin
+                val_m = 2'b00;
+            end
+        end
+        else begin
+            val_m   = 2'b00;
+        end
+    end
 
-        casez (instr)
-            32'b?????????????????001?????1110011: val_m = 6'b110001; // csrrw
-            32'b?????????????????010?????1110011: val_m = 6'b110010; // csrrs |=
-            32'b00000000000000000000000001110011: val_m = 6'b101111; // ecall
-            32'b00110000001000000000000001110011: val_m = 6'b001011; // mret
-            default: val_m = 6'h00;
+    // Regwr
+    always @(*) begin
+        case(op)
+            5'b01101: RegWr_r = 1'b1; // lui
+            5'b00101: RegWr_r = 1'b1; // auipc
+            5'b00100: RegWr_r = 1'b1; // alu_i
+            5'b01100: RegWr_r = 1'b1; // alu
+            5'b11011: RegWr_r = 1'b1; // jal
+            5'b11001: RegWr_r = 1'b1; // jalr
+            5'b00000: RegWr_r = 1'b1; // load
+            default: RegWr_r = 1'b0;
         endcase
     end
 
-    // 非特权
-    always @(*) begin
-        casez (instr)
-            32'b?????????????????????????0110111: val = 17'b10000000000010011; // lui 
-            32'b?????????????????????????0010111: val = 17'b10000000001010000; // auipc
-            32'b?????????????????000?????0010011: val = 17'b10000000000010000; // addi
-            32'b?????????????????010?????0010011: val = 17'b10000000000010010; // slti
-            32'b?????????????????011?????0010011: val = 17'b10000000000011010; // sltiu
-            32'b?????????????????100?????0010011: val = 17'b10000000000010100; // xori
-            32'b?????????????????110?????0010011: val = 17'b10000000000010110; // ori
-            32'b?????????????????111?????0010011: val = 17'b10000000000010111; // andi
-            32'b0000000??????????001?????0010011: val = 17'b10000000000010001; // slli
-            32'b0000000??????????101?????0010011: val = 17'b10000000000010101; // srli
-            32'b0100000??????????101?????0010011: val = 17'b10000000000011101; // srai
-            32'b0000000??????????000?????0110011: val = 17'b10000000000000000; // add
-            32'b0100000??????????000?????0110011: val = 17'b10000000000001000; // sub
-            32'b0000000??????????001?????0110011: val = 17'b10000000000000001; // sll
-            32'b0000000??????????010?????0110011: val = 17'b10000000000000010; // slt
-            32'b0000000??????????011?????0110011: val = 17'b10000000000001010; // sltu
-            32'b0000000??????????100?????0110011: val = 17'b10000000000000100; // xor
-            32'b0000000??????????101?????0110011: val = 17'b10000000000000101; // srl
-            32'b0100000??????????101?????0110011: val = 17'b10000000000001101; // sra
-            32'b0000000??????????110?????0110011: val = 17'b10000000000000110; // or
-            32'b0000000??????????111?????0110011: val = 17'b10000000000000111; // and
-            32'b?????????????????????????1101111: val = 17'b10010000001100000; // jal
-            32'b?????????????????000?????1100111: val = 17'b10100000001100000; // jalr
-            32'b?????????????????000?????1100011: val = 17'b01000000000000010; // beq
-            32'b?????????????????001?????1100011: val = 17'b01010000000000010; // bne
-            32'b?????????????????100?????1100011: val = 17'b01100000000000010; // blt
-            32'b?????????????????101?????1100011: val = 17'b01110000000000010; // bge
-            32'b?????????????????110?????1100011: val = 17'b01100000000001010; // bltu
-            32'b?????????????????111?????1100011: val = 17'b01110000000001010; // bgeu
-            32'b?????????????????000?????0000011: val = 17'b10000100000010000; // lb
-            32'b?????????????????001?????0000011: val = 17'b10000100010010000; // lh
-            32'b?????????????????010?????0000011: val = 17'b10000100100010000; // lw
-            32'b?????????????????100?????0000011: val = 17'b10000101000010000; // lbu
-            32'b?????????????????101?????0000011: val = 17'b10000101010010000; // lhu
-            32'b?????????????????000?????0100011: val = 17'b00000010000010000; // sb
-            32'b?????????????????001?????0100011: val = 17'b00000010010010000; // sh
-            32'b?????????????????010?????0100011: val = 17'b00000010100010000; // sw
-            // 32'b?????????????????001?????1110011: val = 17'b10001000000000000; // csrrw
-            // 32'b?????????????????010?????1110011: val = 17'b10001000000000001; // csrrs |=
-            // 32'b00000000000000000000000001110011: val = 17'b00000000000001111; // ecall
-            // 32'b00110000001000000000000001110011: val = 17'b00000000000001011; // mret
-            default: val = 17'h0000;
+    assign  RegWr       = RegWr_r | mRegWr[0];
 
-            // assign {RegWr, Branch[2:0], MemtoReg[1:0], MemWr, MemOp[2:0], ALUAsrc, ALUBsrc[1:0], ALUctr[3:0] } = val;
+    always @(*) begin
+        case(op)
+            5'b11011: Branch_r = 3'b001;
+            5'b11001: Branch_r = 3'b010;
+            5'b11000: begin
+                case(fun3)
+                    3'b000: Branch_r = 3'b100;
+                    3'b001: Branch_r = 3'b101;
+                    3'b010: Branch_r = 3'b000;
+                    3'b011: Branch_r = 3'b000;
+                    3'b100: Branch_r = 3'b110;
+                    3'b101: Branch_r = 3'b111;
+                    3'b110: Branch_r = 3'b110;
+                    3'b111: Branch_r = 3'b111;
+                endcase
+            end
+            default: Branch_r = 3'b000;
         endcase
     end
 
-    localparam IDLE                 = 0;
-    localparam WAIT_INST_VALID      = 1;
-    localparam WAIT_DECODE_READY    = 2;
+    assign  MemtoReg    = (op == 5'b00000); // load
 
-    reg     [1:0]       current_state;
-    reg     [1:0]       next_state;
+    assign  MemWr       = (op == 5'b01000);
 
+    // // ALUAsrc
+    always @(*) begin  // 1'b0, rs1, 1'b1, pc
+        case(op)
+            5'b00101: ALUAsrc_r = 1'b1; // auipc    R(rd) = s -> pc + imm
+            5'b11011: ALUAsrc_r = 1'b1; // jal      R(rd) = s -> pc + 4; s -> dnpc += imm - 4;
+        default: ALUAsrc_r = 1'b0;
+        endcase
+    end
 
-    always @(posedge clk or posedge reset) begin
+    // // ALUBsrc
+    always @(*) begin // 1'b0, rs2, 1'b1, imm
+        case(op)
+            5'b01100: ALUBsrc_r = 1'b0; // alu
+            5'b11000: ALUBsrc_r = 1'b0; // branch  s -> dnpc += ((uint32_t)src1 < (uint32_t)src2) ? (imm - 4) : 0
+        default: ALUBsrc_r = 1'b1;
+        endcase
+    end
+
+    assign  ebreak  = (instr == 32'h00100073);
+    // // ALUctr
+    always @(*) begin
+        if(op == 5'b01101) begin // lui
+            ALUctr_r = 4'b1010;
+        end
+        else if(op == 5'b00100) begin // alu_i
+            if(fun3 == 3'b101) begin
+                ALUctr_r = {fun7[5], fun3};
+            end
+            else begin
+                ALUctr_r = {1'b0, fun3};
+            end
+        end
+        else if(op == 5'b01100) begin // alu
+            ALUctr_r = {fun7[5], fun3};
+        end
+        else if(op == 5'b11000) begin // branch
+            if(fun3[2:1] == 2'b11) begin
+                ALUctr_r = 4'b0011; // bltu bgeu
+            end
+            else begin
+                ALUctr_r = 4'b0010; // beq, bne, blt, bge
+            end
+        end
+        else begin
+            ALUctr_r = 4'b0000;
+        end
+    end
+
+    assign Branch   = Branch_r;
+    assign MemOp    = fun3;
+    assign ALUAsrc  = ALUAsrc_r;
+    assign ALUBsrc  = ALUBsrc_r;
+    assign ALUctr   = ALUctr_r;
+
+    localparam WAIT_INST_VALID      = 0;
+    localparam WAIT_DECODE_READY    = 1;
+
+    reg           current_state;
+    reg           next_state;
+
+    always @(posedge clk) begin
         if(reset == 1'b1) begin
-            current_state <= IDLE;
+            current_state <= WAIT_INST_VALID;
         end
         else begin
             current_state <= next_state;
@@ -197,12 +298,8 @@ module IDU_ysyx(
     always @(*) begin
         case(current_state)
 
-            IDLE: begin
-                next_state = WAIT_INST_VALID;
-            end
-
             WAIT_INST_VALID: begin
-                if(inst_valid == 1'b1) begin
+                if(inst_valid == 1'b1 && pc_valid == 1'b0) begin // in_pready
                     next_state = WAIT_DECODE_READY;
                 end
                 else begin
@@ -211,38 +308,86 @@ module IDU_ysyx(
             end
 
             WAIT_DECODE_READY: begin
-                 if(decode_ready == 1'b1) begin
-                    next_state = IDLE;
+                 if((decode_ready == 1'b1 && decode_valid == 1'b1) || pc_valid == 1'b1) begin
+                    next_state = WAIT_INST_VALID;
                 end
                 else begin
                     next_state = WAIT_DECODE_READY;
                 end
             end
 
-            default: begin
-                next_state = IDLE;
-            end
         endcase
     end
 
-    assign  inst_ready      = (current_state == WAIT_INST_VALID) ? 1'b1 : 1'b0;
-    assign  decode_valid    = (current_state == WAIT_DECODE_READY) ? 1'b1 : 1'b0;
+    wire            conflict;
+    reg             finish_r;
 
-    assign  pc_out          = pc_out_r;
+    assign  inst_ready      = (current_state == WAIT_INST_VALID);
+    assign  decode_valid    = (current_state == WAIT_DECODE_READY && conflict == 1'b0);
+
+    assign  snpc_out        = snpc_r;
+    assign  pc_out          = pc_r;
+
+    always @(posedge clk) begin
+        if(inst_valid && inst_ready) begin
+            instr       <= inst;
+            pslverr     <= in_pslverr;
+            pc_r        <= pc;
+            snpc_r      <= snpc;
+        end
+    end
+
+    // RAW阻塞
 
 
-    always @(posedge clk or posedge reset) begin
+    always @(posedge clk) begin
         if(reset == 1'b1) begin
-            instr       <= 32'hffffffff;
-            pc_out_r    <= 32'hffffffff;
+            finish_r     <= 1'b0;
         end
         else begin
-            if(inst_valid == 1'b1 && inst_ready == 1'b1) begin
-                instr       <= inst;
-                pc_out_r    <= pc;
+            if(inst_valid && inst_ready) begin
+                finish_r     <= flush_finish;
             end
         end
     end
 
+    assign  flush_finish_out   = finish_r;
 
+    assign  conflict =  (((ALUAsrc_r == 1'b0 && Ra != 0 && Rw_exu == Ra) || ((MemWr == 1'b1 || ALUBsrc_r == 1'b0) && Rb != 0 && Rw_exu == Rb)) && load_exu == 2'b01)  // exu
+                        || (((ALUAsrc_r == 1'b0 && Ra != 0 && Rw_lsu == Ra) || ((MemWr == 1'b1 || ALUBsrc_r == 1'b0) && Rb != 0 && Rw_lsu == Rb)) && load_lsu == 2'b01); // lsu
+
+
+`ifdef ysyx_25040102_SIM
+    reg     conf_delay;
+    wire    conf_edge   = !conf_delay & conflict;
+
+    always @(posedge clk) begin
+        conf_delay      <= conflict;
+    end
+    
+    always @(posedge clk) begin
+        if(conf_edge == 1'b1 && op == 5'b00000) begin
+            time_add(5); // raw_conflict
+        end
+    end
+
+    always @(posedge clk) begin
+        if(conflict && op == 5'b00000) begin
+            cycle_add(5);
+        end
+    end
+
+    always @(posedge clk) begin
+        if(conf_edge == 1'b1 && op != 5'b00000) begin
+            time_add(4); // raw_conflict
+        end
+    end
+
+    always @(posedge clk) begin
+        if(conflict && op != 5'b00000) begin
+            cycle_add(4);
+        end
+    end
+    
+`endif
 endmodule

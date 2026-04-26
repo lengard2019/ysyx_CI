@@ -21,7 +21,7 @@
 
 #define MTRACE_LOW 0x80262b80
 #define MTRACE_HIGH 0x80262c00
-#define CONFIG_MTRACE_COND 1
+// #define CONFIG_MTRACE_COND 1
 
 #if   defined(CONFIG_PMEM_MALLOC)
 static uint8_t *pmem = NULL;

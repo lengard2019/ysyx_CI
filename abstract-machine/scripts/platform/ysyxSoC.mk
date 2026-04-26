@@ -12,7 +12,7 @@ AM_SRCS := riscv/ysyxSoC/start.S \
       
 
 
-YSYXSOC_HOME  = /home/dengzibin/ysyx-workbench/ysyxSoC
+# YSYXSOC_HOME  = /home/dengzibin/ysyx-workbench/ysyxSoC
 CFLAGS    += -fdata-sections -ffunction-sections
 CFLAGS    += -I$(AM_HOME)/am/src/riscv/ysyxSoC/include
 LDSCRIPTS += $(AM_HOME)/scripts/linker_soc.ld
