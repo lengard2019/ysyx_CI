@@ -6,8 +6,9 @@
 !/nanos-lite/*
 !/navy-apps/*
 !/npc/*
-!/rt-thread-am/*
-!/ysyxSoC/*
+!/patch/*
+/rt-thread-am
+/ysyxSoC
 !Makefile
 !README.md
 !.gitignore
