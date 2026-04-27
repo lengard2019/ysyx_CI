@@ -1,6 +1,8 @@
 *.*
 *
 !*/
+!/patch/
+!/patch/**
 !/nemu/*
 !/nexus-am/*
 !/nanos-lite/*
@@ -11,7 +13,6 @@
 /fceux-am
 /am-kernels
 /nvboard
-!/patch/
 !Makefile
 !README.md
 !.gitignore
