@@ -6,10 +6,10 @@ VERILATOR = verilator
 VERILATOR_CFLAGS += -MMD --build -cc  \
 				-O3 --x-assign fast --x-initial fast --noassert
  
-BUILD_DIR = ./build
+BUILD_DIR = $(NPC_HOME)/build
 OBJ_DIR = $(BUILD_DIR)/obj_dir
 BIN = $(BUILD_DIR)/$(TOPNAME)
-YSYX_FILE = $(BUILD_DIR)/$(TOPNAME).v
+YSYX_FILE = $(NPC_HOME)/build/$(TOPNAME).v
 
 # EXCLUDE_FILE = ./vsrc/cpu_top.v
 
@@ -35,7 +35,7 @@ NPC_TOP = ./sim_file/sim_npc/npc_top.v
 VIVERILOG = /home/dengzibin/ysyx-workbench/npc/build/cpu/ysyx_25040102.v
 VNETLIST = $(shell find $(abspath ./build/netlist) -name "*.v" -or -name "*.vh" )
 VHFILE = $(shell find $(abspath ./vsrc) -name "*.vh")
-VHSRCS = ./vsrc
+VHSRCS = $(NPC_HOME)/vsrc
 VSRCS = $(shell find $(abspath ./vsrc) -name "*.v")
 VSRCS_NPC = $(shell find $(abspath ./vsrc_npc) -name "*.v" )
 CSRCS = $(shell find $(abspath ./csrc) -name "*.c" -or -name "*.cc" -or -name "*.cpp")
