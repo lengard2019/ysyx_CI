@@ -96,7 +96,7 @@ cat:
 # 	cp ./build/cpu/ysyx_25040102.v ./vsrc_npc/
 	sed -i 's/`define ysyx_25040102_NPC 32'"'"'h80000000/`define ysyx_25040102_NPC 32'"'"'h30000000/g' $(YSYXSOC_HOME)/build/cpu/ysyx_25040102.v
 
-clean_obj:
+clean:
 	rm -rf $(BUILD_DIR)
  
 .PHONY2: default all clean run
