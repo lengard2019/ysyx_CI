@@ -10,9 +10,8 @@ AM_SRCS := riscv/ysyxSoC/start.S \
            platform/dummy/mpe.c
 
       
-
-
-# YSYXSOC_HOME  = /home/dengzibin/ysyx-workbench/ysyxSoC
+AM_HOME = $(YSYX_HOME)/abstract-machine
+YSYXSOC_HOME  = $(YSYX_HOME)/ysyxSoC
 CFLAGS    += -fdata-sections -ffunction-sections
 CFLAGS    += -I$(AM_HOME)/am/src/riscv/ysyxSoC/include
 LDSCRIPTS += $(AM_HOME)/scripts/linker_soc.ld

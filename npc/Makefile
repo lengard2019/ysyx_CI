@@ -23,6 +23,9 @@ $(shell mkdir -p $(BUILD_DIR))
 SRC_AUTO_BIND = $(abspath $(BUILD_DIR)/auto_bind.cpp)
 $(SRC_AUTO_BIND): $(NXDC_FILES)
 	python3 $(NVBOARD_HOME)/scripts/auto_pin_bind.py $^ $@
+
+
+AM_HOME = $(YSYX_HOME)/abstract-machine
  
 # project source
 VSIM = $(shell find $(abspath ./sim_file/sim_npc) -name "*.v")
