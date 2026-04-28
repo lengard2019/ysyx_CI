@@ -7,8 +7,8 @@ AM_SRCS := platform/nemu/trm.c \
            platform/nemu/ioe/disk.c \
            platform/nemu/mpe.c
 
-AM_HOME = $(YSYX_HOME)/abstract-machine
-NEMU_HOME = $(YSYX_HOME)/nemu
+# AM_HOME = $(YSYX_HOME)/abstract-machine
+# NEMU_HOME = $(YSYX_HOME)/nemu
 CFLAGS    += -fdata-sections -ffunction-sections
 CFLAGS    += -I$(AM_HOME)/am/src/platform/nemu/include
 LDSCRIPTS += $(AM_HOME)/scripts/linker.ld

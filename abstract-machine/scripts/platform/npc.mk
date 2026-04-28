@@ -9,8 +9,8 @@ AM_SRCS := riscv/npc/start.S \
            platform/dummy/mpe.c
 
 
-AM_HOME = $(YSYX_HOME)/abstract-machine
-NPC_HOME  = $(YSYX_HOME)/npc
+# AM_HOME = $(YSYX_HOME)/abstract-machine
+# NPC_HOME  = $(YSYX_HOME)/npc
 CFLAGS    += -fdata-sections -ffunction-sections
 CFLAGS    += -I$(AM_HOME)/am/src/riscv/npc/include
 LDSCRIPTS += $(AM_HOME)/scripts/linker.ld

@@ -10,7 +10,7 @@ AM_SRCS := riscv/ysyxSoC/start.S \
            platform/dummy/mpe.c
 
       
-AM_HOME = $(YSYX_HOME)/abstract-machine
+# AM_HOME = $(YSYX_HOME)/abstract-machine
 YSYXSOC_HOME  = $(YSYX_HOME)/ysyxSoC
 CFLAGS    += -fdata-sections -ffunction-sections
 CFLAGS    += -I$(AM_HOME)/am/src/riscv/ysyxSoC/include

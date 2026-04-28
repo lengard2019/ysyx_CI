@@ -12,7 +12,6 @@
 #
 # See the Mulan PSL v2 for more details.
 #**************************************************************************************/
-NEMU_HOME = $(YSYX_HOME)/nemu
 
 # Sanity check
 ifeq ($(wildcard $(NEMU_HOME)/src/nemu-main.c),)
