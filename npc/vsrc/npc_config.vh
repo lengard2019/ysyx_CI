@@ -5,7 +5,7 @@
     `define ysyx_25040102_NPC 32'h80000000
 `endif
 
-`define ysyx_25040102_ICACHE_N 2
+`define ysyx_25040102_ICACHE_N 1
 `define ysyx_25040102_ICACHE_M 2
 
 `ifdef ysyx_25040102_SIM

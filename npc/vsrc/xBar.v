@@ -172,7 +172,7 @@ module ysyx_25040102_xBar(
     assign  lsu_wready              = (clint == 1'b1) ? clint_master_wready  : io_master_wready  ;
     assign  lsu_bvalid              = (clint == 1'b1) ? clint_master_bvalid  : io_master_bvalid  ;
     assign  lsu_bresp               = (clint == 1'b1) ? clint_master_bresp   : io_master_bresp   ;
-    assign  lsu_bid                 = (clint == 1'b1) ? clint_master_bid     : io_master_bid     ;
+    assign  lsu_bid                 = 4'b0001;
 
     assign  ifu_arready             = (current_state == IFU_ADDR) ? io_master_arready : 1'b0;
     assign  lsu_arready             = (current_state == LSU_ADDR) ? (clint == 1'b1) ? clint_master_arready : io_master_arready : 0;

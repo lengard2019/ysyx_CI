@@ -231,7 +231,7 @@ module ysyx_25040102_IDU_ysyx(
         case(op)
             5'b00101: ALUAsrc_r = 1'b1; // auipc    R(rd) = s -> pc + imm
             5'b11011: ALUAsrc_r = 1'b1; // jal      R(rd) = s -> pc + 4; s -> dnpc += imm - 4;
-        default: ALUAsrc_r = 1'b0;
+            default: ALUAsrc_r = 1'b0;
         endcase
     end
 
@@ -240,7 +240,7 @@ module ysyx_25040102_IDU_ysyx(
         case(op)
             5'b01100: ALUBsrc_r = 1'b0; // alu
             5'b11000: ALUBsrc_r = 1'b0; // branch  s -> dnpc += ((uint32_t)src1 < (uint32_t)src2) ? (imm - 4) : 0
-        default: ALUBsrc_r = 1'b1;
+            default: ALUBsrc_r = 1'b1;
         endcase
     end
 

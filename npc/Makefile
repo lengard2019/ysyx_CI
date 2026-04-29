@@ -74,7 +74,7 @@ run:
 	make -C ./obj_dir -f Vnpc_top.mk Vnpc_top
 	./obj_dir/Vnpc_top $(ARGS) $(IMG)
 
-sim-iverilog: 
+sim-iverilog: $(YSYX_FILE)
 	mkdir -p $(HEX_PATH) 
 	python3 $(AM_HOME)/tools/bin2hex.py $(IMG) $(HEX_PATH)/$(basename $(notdir $(IMG))).hex 4
 	iverilog -g2012 -o $(BUILD_DIR)/iverilog_sim $(VSIM) $(YSYX_FILE) $(VSRCS_NPC) -Dysyx_25040102_NPC=32\'h80000000
