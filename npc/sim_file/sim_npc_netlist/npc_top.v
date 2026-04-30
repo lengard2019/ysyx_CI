@@ -48,7 +48,7 @@ module npc_top(
 
     wire io_interrupt = 1'b0;
     
-    ysyx_25040102_netlist u_cpu_top(
+    ysyx_25040102 u_cpu_top(
         .io_master_awready 	(io_master_awready  ),
         .io_master_awvalid 	(io_master_awvalid  ),
         .io_master_awaddr  	(io_master_awaddr   ),

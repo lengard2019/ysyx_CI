@@ -7,10 +7,10 @@ module tb_npc_top();
     reg reset;
     
 
-    wire mcause_0 = u_npc_top.u_cpu_top.u_ysyx_25040102.\u_mReg.mcause_r_0__reg_p .Q;
-    wire mcause_1 = u_npc_top.u_cpu_top.u_ysyx_25040102.\u_mReg.mcause_r_1__reg_p .Q;
-    wire mcause_2 = u_npc_top.u_cpu_top.u_ysyx_25040102.\u_mReg.mcause_r_2__reg_p .Q;
-    wire mcause_3 = u_npc_top.u_cpu_top.u_ysyx_25040102.\u_mReg.mcause_r_3__reg_p .Q;
+    wire mcause_0 = u_npc_top.u_cpu_top.\u_mReg.mcause_r_$_DFFE_PP__Q .Q;
+    wire mcause_1 = u_npc_top.u_cpu_top.\u_mReg.mcause_r_$_DFFE_PP__Q_1 .Q;
+    wire mcause_2 = u_npc_top.u_cpu_top.\u_mReg.mcause_r_$_DFFE_PP__Q_2 .Q;
+    wire mcause_3 = u_npc_top.u_cpu_top.\u_mReg.mcause_r_$_DFFE_PP__Q_3 .Q;
 
     // wire rf1_0 = u_npc_top.u_cpu_top.u_ysyx_25040102.\u_register.rf[14]_0__reg_p .Q;
     // wire rf1_1 = u_npc_top.u_cpu_top.u_ysyx_25040102.\u_register.rf[14]_1__reg_p .Q;
@@ -112,7 +112,7 @@ module tb_npc_top();
     // wire pc_31 = u_npc_top.u_cpu_top.u_ysyx_25040102.pc_ls_31__reg_p .Q;
 
 
-    wire [3:0] mcause = {mcause_3, mcause_2, mcause_1, mcause_0};
+    wire [3:0] mcause = {mcause_0, mcause_1, mcause_2, mcause_3};
 
     // wire [31:0] result_a4 = {rf1_31, rf1_30, rf1_29, rf1_28, rf1_27, rf1_26, rf1_25, rf1_24,
     //                 rf1_23, rf1_22, rf1_21, rf1_20, rf1_19, rf1_18, rf1_17, rf1_16,

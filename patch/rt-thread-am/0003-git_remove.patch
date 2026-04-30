@@ -1,7 +1,7 @@
 From 2ec507fa18f0c8f91bc36fd3b51187a8720c76f9 Mon Sep 17 00:00:00 2001
 From: dengzibin <1447762756@qq.com>
 Date: Mon, 27 Apr 2026 19:13:43 +0800
-Subject: [PATCH 3/5] git_remove
+Subject: [PATCH 3/6] git_remove
 
 ---
  bsp/abstract-machine/.gitignore | 1 +

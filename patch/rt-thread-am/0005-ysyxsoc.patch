@@ -1,7 +1,7 @@
 From b21c9ae304687bd9e4cc73e88c897b65d3973624 Mon Sep 17 00:00:00 2001
 From: dengzibin <1447762756@qq.com>
 Date: Wed, 29 Apr 2026 15:17:11 +0800
-Subject: [PATCH 5/5] ysyxsoc
+Subject: [PATCH 5/6] ysyxsoc
 
 ---
  bsp/abstract-machine/Makefile | 2 +-
