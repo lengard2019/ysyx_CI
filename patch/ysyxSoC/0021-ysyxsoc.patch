@@ -1,7 +1,7 @@
 From 8dc0007cdd00b7af0252c5460bc734c666468dbc Mon Sep 17 00:00:00 2001
 From: dengzibin <1447762756@qq.com>
 Date: Tue, 28 Apr 2026 20:13:15 +0800
-Subject: [PATCH 21/25] ysyxsoc
+Subject: [PATCH 21/26] ysyxsoc
 
 ---
  Makefile | 10 +++++-----
