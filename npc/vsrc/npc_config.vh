@@ -2,7 +2,7 @@
 `define NPC_CONFIG_VH
 
 `ifndef ysyx_25040102_NPC
-    `define ysyx_25040102_NPC 32'h80000000
+    `define ysyx_25040102_NPC 32'h30000000
 `endif
 
 `define ysyx_25040102_ICACHE_N 1
