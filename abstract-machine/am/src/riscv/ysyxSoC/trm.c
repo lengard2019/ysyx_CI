@@ -32,7 +32,7 @@ static const char mainargs[MAINARGS_MAX_LEN] = MAINARGS_PLACEHOLDER; // defined 
 static void uart_init() {
 
   outb(UART_BASE + UART_LCR, 0x80); // 跳转
-  outb(UART_BASE + UART_TX, 0x04); // 低八位为10
+  outb(UART_BASE + UART_TX, 0x01); // 低八位为10
   outb(UART_BASE + UART_IE, 0x00); // 高八位为00
   outb(UART_BASE + UART_LCR, 0x03); // 8n1
 

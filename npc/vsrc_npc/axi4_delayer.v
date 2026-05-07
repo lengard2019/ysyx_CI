@@ -181,7 +181,7 @@ module axi4_delayer(
       end
 
       WAIT_OUT_RREADY: begin
-        if(out_rlast == 1'b1 && out_rvalid == 1'b1 && out_rid == 4'h0) begin
+        if(out_rlast == 1'b1 && out_rvalid == 1'b1 && out_rready == 1'b1 && out_rid == 4'h0) begin
           next_read    = BACK_READ;
         end
         else begin
@@ -190,7 +190,7 @@ module axi4_delayer(
       end
 
       BACK_READ: begin
-        if(in_rlast == 1'b1 && in_rid == 4'h0) begin
+        if(in_rlast == 1'b1 && in_rvalid == 1'b1 && in_rready == 1'b1 && in_rid == 4'h0) begin
           next_read    = IDLE_READ;
         end
         else begin
@@ -221,7 +221,7 @@ module axi4_delayer(
         end
 
         WAIT_OUT_RREADY1: begin
-          if(out_rlast == 1'b1 && out_rvalid == 1'b1 && out_rid == 4'h1) begin
+          if(out_rlast == 1'b1 && out_rvalid == 1'b1 && out_rready == 1'b1 && out_rid == 4'h1) begin
             state_rd_1    <= BACK_READ1;
           end
           else begin
@@ -230,7 +230,7 @@ module axi4_delayer(
         end
 
         BACK_READ1: begin
-          if(in_rlast == 1'b1 && in_rid == 4'h1) begin
+          if(in_rlast == 1'b1 && in_rvalid == 1'b1 && in_rready == 1'b1 && in_rid == 4'h1) begin
             state_rd_1    <= IDLE_READ1;
           end
           else begin
@@ -268,7 +268,7 @@ module axi4_delayer(
       rpt_r   <= 3'h0;
     end
     else begin
-      if((latency_read[rpt_r] <= counter_read) && (state == BACK_READ)) begin
+      if((in_rvalid && in_rready) && (state == BACK_READ)) begin
         rpt_r <= rpt_r + 1;
       end
     end
@@ -372,7 +372,7 @@ module axi4_delayer(
         end
 
         BACK_WR: begin
-          if(in_bvalid) begin
+          if(in_bvalid && in_bready) begin
             state_wr    <= IDLE_WR;
           end
           else begin
@@ -418,7 +418,7 @@ module axi4_delayer(
   end
 
   always @(posedge clock) begin
-    if(reset == 1'b1) begin
+    if(reset == 1'b1 || state_wr == IDLE_WR) begin
       latency_wr    <= 0;
     end
     else begin 
@@ -431,7 +431,7 @@ module axi4_delayer(
   end
 
   assign  in_bresp    = fifo_bresp;
-  assign  in_bvalid   = (latency_wr == counter_wr) && (counter_wr != 0);
+  assign  in_bvalid   = (latency_wr <= counter_wr) && (counter_wr != 0);
   assign  in_bid      = fifo_bid;
   assign  out_bready  = (state_wr == WAIT_OUT_BREADY);
   assign  uart_bready = (state_wr == WAIT_OUT_BREADY);

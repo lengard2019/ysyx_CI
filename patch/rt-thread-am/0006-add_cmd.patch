@@ -1,7 +1,7 @@
 From 77bc9723ab812d443cab450ac40e55acc978966d Mon Sep 17 00:00:00 2001
 From: dengzibin <1447762756@qq.com>
 Date: Thu, 30 Apr 2026 12:44:37 +0800
-Subject: [PATCH 6/6] add_cmd
+Subject: [PATCH 6/7] add_cmd
 
 ---
  bsp/abstract-machine/src/context.c | 105 ++++++++++++-----------------

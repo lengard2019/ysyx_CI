@@ -30,6 +30,7 @@
 #define UART_RX   0
 #define UART_TX   0 // 除法寄存器的低八位
 #define UART_IE   1 // 除法寄存器的高八位
+#define UART_FCR  2 // fifo 控制寄存器
 #define UART_LCR  3 // bit7 跳转到除法寄存器
 #define UART_LSR  5 // bit5 指示fifo空
 

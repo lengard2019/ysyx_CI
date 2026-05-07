@@ -1,7 +1,7 @@
 From ea311efd70a7a9f333eea460e0f1c7a14e450259 Mon Sep 17 00:00:00 2001
 From: 24011211232-Deng Xidian <1447762756@qq.com>
 Date: Sat, 27 Dec 2025 19:23:35 +0800
-Subject: [PATCH 2/6] commit_b2
+Subject: [PATCH 2/7] commit_b2
 
 ---
  bsp/abstract-machine/Makefile     |  2 +-

@@ -107,3 +107,20 @@ void __am_input_keybrd(AM_INPUT_KEYBRD_T *kbd) {
   kbd->keydown = kc & KEYDOWN_MASK ? true : false;
   kbd->keycode = code;
 }
+
+void __am_input_uart(AM_UART_RX_T *urx) {
+
+  uint8_t a = 0;
+  uint8_t b = 0;
+
+  a = inb(UART_BASE + UART_LSR);
+  b = a & 0x01;
+  
+  if(b == 0x01){
+    char uart = inb(UART_BASE + UART_RX);
+    urx->data = uart;
+  }
+  else{
+    urx->data = (char)0;
+  }
+}
