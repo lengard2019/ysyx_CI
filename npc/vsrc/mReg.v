@@ -1,4 +1,5 @@
 `include "npc_config.vh"
+
 module ysyx_25040102_mReg (
     input           clk,
     input           mret,

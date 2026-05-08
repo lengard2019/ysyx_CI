@@ -3,6 +3,7 @@
 // `ifdef DIFFTEST
 // import "DPI-C" function void difftest_skip_ref();
 // `endif 
+
 module ysyx_25040102_clint(
     input               clk,
     input               reset,
