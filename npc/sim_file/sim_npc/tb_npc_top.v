@@ -183,11 +183,11 @@ module tb_npc_top();
     // ============================================
     // 可选: 波形文件生成 (VCD格式，GTKWave可查看)
     // ============================================
-    initial begin
-        $dumpfile("tb_npc_top_.fst");
-        $dumpvars(99, tb_npc_top);
-        $display("[%0t] VCD dump started: tb_npc_top.fst", $time);
-    end
+    // initial begin
+    //     $dumpfile("tb_npc_top_.fst");
+    //     $dumpvars(99, tb_npc_top);
+    //     $display("[%0t] VCD dump started: tb_npc_top.fst", $time);
+    // end
     
     // ============================================
     // 仿真结束检测 (可选，因为npc_top内部已有$finish)

@@ -102,7 +102,7 @@ module ysyx_25040102_iCache(
             end
 
             WAIT_INST: begin
-                if(master_rlast == 1'b1) begin
+                if(master_rlast == 1'b1 && master_rready == 1'b1 && master_rvalid == 1'b1) begin
                     next_state = BACK_INST;
                 end
                 else begin
