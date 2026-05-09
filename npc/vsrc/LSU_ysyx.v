@@ -309,7 +309,7 @@ module ysyx_25040102_LSU_ysyx(
 
     // 传awaddr 
     assign  master_awvalid      = current_state == WAIT_AWREADY;
-    assign  master_awaddr       = {Addr_r[31:2], 2'b00};
+    assign  master_awaddr       = Addr_r;
     assign  master_awid         = 4'h1;
     assign  master_awburst      = 2'b01;
 

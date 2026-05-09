@@ -1,7 +1,7 @@
 From 74e683ef3f894c06f76a0aad823a8e8929699892 Mon Sep 17 00:00:00 2001
 From: dengzibin <1447762756@qq.com>
 Date: Thu, 7 May 2026 12:00:40 +0800
-Subject: [PATCH 25/26] commit-rt-uart
+Subject: [PATCH 25/27] commit-rt-uart
 
 ---
  Makefile                                     | 16 +++++-----
