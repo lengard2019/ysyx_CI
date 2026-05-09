@@ -31,7 +31,7 @@ module ysyx_25040102_iCache(
     parameter   M = 2; // 需要+2, 因为一个cache块4字节
     localparam  CACHE_SIZE  = 2**N; // 16
     localparam  BLOCK_SIZE  = 2**M; // 16
-    localparam  TAG_WIDTH   = 32 - M -N - 2 -8; 
+    localparam  TAG_WIDTH   = 32 - M -N - 2; 
 
     localparam  IDLE        = 0;
     localparam  BACK_INST   = 1;
@@ -50,7 +50,7 @@ module ysyx_25040102_iCache(
     reg     [M-1:0] cnt;
     // reg     [31:0]  inst_r;
 
-    assign  pc_tag     = in_paddr[31 - 8 : M + N + 2];
+    assign  pc_tag     = in_paddr[31 : M + N + 2];
     assign  pc_index   = in_paddr[M + N -1 +2 : M + 2];
     assign  offset     = in_paddr[M-1+2 : 2];
 
