@@ -33,7 +33,7 @@ static void uart_init() {
 
   outb(UART_BASE + UART_LCR, 0x83); // 跳转
   outb(UART_BASE + UART_IE, 0x00); // 高八位为00
-  outb(UART_BASE + UART_TX, 0x0D); // 低八位为0D
+  outb(UART_BASE + UART_TX, 0x01); // 低八位为0D
   outb(UART_BASE + UART_LCR, 0x03); // 8n1
 
 }
