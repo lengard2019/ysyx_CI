@@ -69,7 +69,7 @@ $(YSYX_FILE): $(VHFILE) $(VSRCS)
 verilog: $(YSYX_FILE)
 
 run:
-	verilator -Wno-fatal --cc $(VSRCS) $(NPC_TOP) $(VSRCS_NPC) -I$(VHSRCS) $(NPC_DEFINE) $ --exe $(CSRCSS) -LDFLAGS -lreadline -CFLAGS "-I/home/dengzibin/ysyx-workbench/npc/csrc/include"\
+	verilator -Wno-fatal --cc $(VSRCS) $(NPC_TOP) $(VSRCS_NPC) -I$(VHSRCS) $(NPC_DEFINE) $ --exe $(CSRCSS) -LDFLAGS -lreadline -CFLAGS "-I$(NPC_HOME)/csrc/include"\
 		--top-module npc_top --trace-fst --autoflush
 	make -C ./obj_dir -f Vnpc_top.mk Vnpc_top
 	./obj_dir/Vnpc_top $(ARGS) $(IMG)
