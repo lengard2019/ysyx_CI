@@ -1,7 +1,7 @@
 From bfd554354ddc2aaf7db7921080215c39d86f6532 Mon Sep 17 00:00:00 2001
 From: dengzibin <1447762756@qq.com>
 Date: Thu, 7 May 2026 14:35:03 +0800
-Subject: [PATCH 26/27] uart-write
+Subject: [PATCH 26/28] uart-write
 
 ---
  perip/uart16550/rtl/uart_tfifo.v | 4 ++--
